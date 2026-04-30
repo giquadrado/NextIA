@@ -92,14 +92,17 @@
   padding-top: var(--navbar-height);
 }
 
+
 .hero__bg {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,0.72) 38%, rgba(0,0,0,0.1) 62%, transparent 100%),
-    linear-gradient(135deg, var(--color-primary-dark) 0%, #0a7a72 55%, #28BEA5 100%);
+  background-image: url("/NextIA/assets/images/BC-Hero.png");
+  background-size: cover;      
+  background-position: center; 
+  background-repeat: no-repeat;
   z-index: 0;
 }
+
 
 .hero__content {
   position: relative;
