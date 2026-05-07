@@ -51,21 +51,23 @@
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: var(--space-md);
   margin-top: var(--space-lg);
+  grid-template-columns: repeat(3, 1fr) !important;
 }
 
 .card {
   background-color: var(--color-primary-dark);
   border: 2px solid var(--color-border-glow);
   border-radius: var(--radius-md);
-  padding: var(--space-md) var(--space-md) var(--space-lg);
+  padding: var(--space-md);
   display: flex;
+  align-items: center;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
   cursor: default;
+  justify-content: flex-start;
 }
 
 .card:hover {
@@ -74,19 +76,23 @@
 }
 
 .card__icon {
-  width: auto;
-  max-height: 72px;
   /* placeholder cinza quando sem imagem real */
   background: rgba(255,255,255,0.08);
   border-radius: var(--radius-sm);
   min-height: 56px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+
 }
+
 
 .card__text {
   color: var(--color-white);
   font-size: var(--text-h3);
   font-weight: 400;
   line-height: 1.4;
+  text-align: center;
 }
 
 
