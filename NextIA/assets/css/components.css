@@ -164,78 +164,20 @@
 .testimonial footer strong { font-size: var(--text-body-lg); }
 .testimonial footer span  { font-size: var(--text-body-lg); font-weight: 400; }
 
-
-/* ══════════════ FORMULÁRIO ══════════════ */
-
-.form-card {
-  background-color: var(--color-primary-dark);
-  border-radius: var(--radius-lg);
-  padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3.5vw, 3.5rem);
-  margin-top: var(--space-lg);
-  box-shadow: 0 8px 48px rgba(0,0,0,0.15);
-}
-
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  gap: var(--space-md);
-}
-
-.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.form-group--full { grid-column: 1 / -1; }
-
-.form-label {
-  color: var(--color-white);
-  font-size: var(--text-h3);
-  font-weight: 500;
-}
-
-.form-input {
-  background-color: var(--color-white);
-  border: 2px solid var(--color-accent-light);
-  border-radius: var(--radius-md);
-  padding: 0.9rem 1.1rem;
-  font-size: var(--text-body-lg);
-  color: var(--color-dark);
-  width: 100%;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(40,190,165,0.25);
-}
-
-.form-input.is-invalid { border-color: var(--color-red); }
-
-.form-textarea {
-  resize: vertical;
-  min-height: 180px;
-}
-
-.form-input::placeholder { color: #aaa; }
-
-.form-error {
-  color: #FF7B8E;
-  font-size: var(--text-sm);
-  min-height: 1.2em;
-}
-
-
 /* ══════════════ TIMELINE ══════════════ */
 
 .timeline__item {
   border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-lg);
-  font-size: clamp(1rem, 1.5vw, 1.5rem);
-  line-height: 1.55;
+  font-size: clamp(0.875rem, 1.2vw, 1rem); /* <- era muito grande, causava overflow */
+  line-height: 1.6;
+  flex: 1; /* <- distribui altura igualmente entre os 4 cards */
+  display: flex;
+  align-items: center;
+}
+
+.timeline__item p {
+  margin: 0;
 }
 
 .timeline__item--red    { background-color: var(--color-red); }
