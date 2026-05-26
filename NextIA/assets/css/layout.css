@@ -16,6 +16,18 @@
   width: 100%;
 }
 
+
+.hero .container {
+  margin-inline: 0; /* remove centralização */
+}
+
+
+.section .container {
+  max-width: 1200px; /* aumenta bastante */
+}
+
+
+
 /* ── Flex helpers ── */
 .flex          { display: flex; }
 .flex-center   { display: flex; align-items: center; justify-content: center; }
