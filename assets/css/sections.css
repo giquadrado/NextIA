@@ -20,7 +20,8 @@
   gap: var(--space-lg);
 }
 
-.navbar__logo img { height: 44px; width: auto; }
+.navbar__logo { flex-shrink: 0; }
+.navbar__logo img { height: 52px; width: auto; object-fit: contain; }
 
 .navbar__links {
   display: flex;
@@ -90,7 +91,7 @@
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url("/NextIA/assets/images/BC-Hero.png");
+  background-image: url("../images/BC-Hero.png");
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;
@@ -181,6 +182,7 @@
   margin-top: var(--space-lg);
   min-height: 480px;
   box-shadow: 0 8px 48px rgba(0,0,0,0.15);
+  background: var(--color-primary-dark);
 }
 
 .demo__media {
@@ -353,6 +355,8 @@
   gap: var(--space-md);
   max-width: 420px;
 }
+
+.footer__brand img { height: 52px; width: auto; object-fit: contain; }
 
 .footer__legal { font-size: var(--text-body); font-weight: 700; line-height: 1.7; }
 
