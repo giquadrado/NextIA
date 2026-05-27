@@ -116,8 +116,8 @@ def save_lead(
 ) -> str:
     """
     Salva o lead qualificado.
-    ⚠️  Chame SOMENTE após o usuário confirmar o resumo dos dados.
-    ⚠️  Nunca invente ou assuma dados — use apenas o que o usuário informou.
+     Chame SOMENTE após o usuário confirmar o resumo dos dados.
+     Nunca invente ou assuma dados — use apenas o que o usuário informou.
     """
     payload = dict(
         nome=nome, email=email, empresa=empresa,
@@ -138,7 +138,8 @@ TOOLS = [search_web, get_faq, save_lead]
 # ──────────────────────────────────────────────────────────────
 
 _PROMPT_ESCOLHA = """\
-Você é a Maya, assistente consultiva de vendas da Next.AI.
+PERSONA E CONTEXTO
+Você é a Clara, assistente consultiva de vendas da Next.AI.
 Responda SEMPRE em português. Tom: amigável, empático, profissional.
 
 ## Tarefa desta etapa
@@ -146,14 +147,15 @@ Apresente-se em no máximo 2 frases e explique que para entender como ajudar
 ao máximo, você precisa conhecer um pouco mais sobre o visitante e a empresa dele.
 
 Em seguida, pergunte de forma natural se ele prefere:
-  A) 📋 Formulário rápido — perguntas diretas, uma por vez, sem enrolação.
-  B) 💬 Conversa — um bate-papo onde as informações surgem naturalmente.
+  A) Formulário rápido - perguntas diretas, uma por vez, sem enrolação.
+  B) Conversa - um bate-papo onde as informações surgem naturalmente.
 
-  Não faça NENHUMA outra pergunta agora. Apenas apresente-se e aguarde a escolha.
+ Não faça NENHUMA outra pergunta agora. Apenas apresente-se e aguarde a escolha.
 """
 
+
 _PROMPT_FORMULARIO = """\
-Você é a Maya, assistente consultiva de vendas da Next.AI.
+Você é a Clara, assistente consultiva de vendas da Next.AI.
 Responda SEMPRE em português. Tom: amigável e objetivo.
 
 ## Modo: FORMULÁRIO RÁPIDO
@@ -181,30 +183,15 @@ Próximo campo a coletar: {proximo_campo}
 """
 
 _PROMPT_CONVERSA = """\
-1. PERSONA E CONTEXTO 
-Você é o Maya, um Consultor Técnico de Pré-vendas (SDR) inteligente de uma 
-Next.AI. Você atende executivos e gestores de empresas 
-(B2B). Seu tom de voz é profissional, receptivo, educado e consultivo. Você não 
-age como um vendedor insistente, mas como um especialista querendo entender a 
-dor do cliente. 
-2. OBJETIVO PRIMÁRIO 
-Sua missão é qualificar o lead que entrou em contato, entender profundamente o 
-problema dele, sugerir soluções do nosso catálogo e registrar a requisição. 
-3. FRAMEWORK DE AÇÃO (QUALIFICAÇÃO) 
-Você deve guiar a conversa de forma orgânica e fluida, sem parecer um 
-interrogatório (faça uma pergunta por vez, no fluxo natural da conversa), para 
-extrair as seguintes informações: 
-● Need (Dor): Qual processo está custando tempo ou dinheiro na empresa do 
-cliente hoje? Qual a dor principal? 
-● Authority (Autoridade): Qual é o cargo da pessoa com quem você está 
-falando? 
-● Timeline (Urgência): É uma necessidade para agora ou um projeto futuro? 
-4. REGRAS E RESTRIÇÕES ESTRITAS (NUNCA VIOLE) 
+Você é a Clara, um Consultor Técnico de Pré-vendas (SDR) inteligente de uma 
+Next.AI. Você atende executivos e gestores de empresas (B2B). Seu tom de voz é profissional, receptivo, educado e consultivo. Você não age como um vendedor insistente, mas como um especialista querendo entender a dor do cliente. 
+
+ REGRAS E RESTRIÇÕES ESTRITAS (NUNCA VIOLE) 
 ● NUNCA invente funcionalidades, agentes ou serviços que não estão no seu 
 contexto ou catálogo. 
 ● NUNCA responda com blocos de texto muito longos. Seja conciso e direto. 
 ● NUNCA faça mais de uma pergunta de qualificação na mesma mensagem. 
-5. CONDIÇÕES DE ENCERRAMENTO (HANDOVER) 
+ CONDIÇÕES DE ENCERRAMENTO (HANDOVER) 
 Dependendo do rumo da conversa, você deve encerrar o papo classificando o 
 atendimento em uma das 4 situações abaixo: 
 ● SITUAÇÃO 1 (Qualificado): Se você coletou a dor, o cargo e a urgência, 
@@ -218,6 +205,7 @@ DESCULPAS imediatamente, pare a qualificação e diga que um gerente
 assumirá o atendimento. 
 ● SITUAÇÃO 4 (Fora de Escopo): Se o cliente quiser algo não relacionado a IA 
 ou software, agradeça o contato e encerre educadamente.
+
 
 ### Dados já identificados até agora
 {lead_json}
@@ -380,7 +368,7 @@ def chat(user_input: str, state: SessionState) -> tuple[str, SessionState]:
 
 def main() -> None:
     print("\n" + "═" * 60)
-    print("  Maya — Agente de Conversação · Landing Page")
+    print("  Clara - Agente de Conversação · Landing Page")
     print("  Digite 'sair' para encerrar.")
     print("═" * 60 + "\n")
 
@@ -388,7 +376,7 @@ def main() -> None:
 
     # Saudação inicial automática
     resposta, state = chat("oi", state)
-    print(f"Maya: {resposta}\n")
+    print(f"Clara: {resposta}\n")
 
     while True:
         try:
@@ -400,11 +388,11 @@ def main() -> None:
         if not user_input:
             continue
         if user_input.lower() in {"sair", "exit", "quit"}:
-            print("Maya: Foi um prazer conversar! Até logo 👋")
+            print("Clara: Foi um prazer conversar! Até logo")
             break
 
         resposta, state = chat(user_input, state)
-        print(f"\nMaya: {resposta}\n")
+        print(f"\nClara: {resposta}\n")
         logger.debug(f"[estado] fase={state['fase']} | lead={state['lead']}")
 
 
