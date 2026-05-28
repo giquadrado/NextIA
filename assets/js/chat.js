@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://nextia-production.up.railway.app";
 
 const chatMessages = document.getElementById("chatMessages");
 const chatForm = document.getElementById("chatForm");
