@@ -269,10 +269,10 @@ def _extract_text(content) -> str:
             else block if isinstance(block, str) else ""
             for block in content
         ]
-        return " ".join(p for p in parts if p).strip()
-    if isinstance(content, dict):
-        return str(content.get("text", content)).strip()
-    if isinstance(content, str):
+        raw = " ".join(p for p in parts if p).strip()
+    elif isinstance(content, dict):
+        raw = str(content.get("text", content)).strip()
+    elif isinstance(content, str):
         raw = content.strip()
         if raw.startswith(("[", "{")):
             try:
@@ -281,8 +281,12 @@ def _extract_text(content) -> str:
                     return result
             except (ValueError, SyntaxError):
                 pass
-        return raw
-    return str(content).strip()
+    else:
+        raw = str(content).strip()
+
+    raw = re.sub(r"<function=[^>]+>.*?</function>", "", raw, flags=re.DOTALL)
+    raw = re.sub(r'\{"nome\".*?\}', "", raw, flags=re.DOTALL)
+    return raw.strip()
 
 # ──────────────────────────────────────────────────────────────
 # Nó principal do Grafo
