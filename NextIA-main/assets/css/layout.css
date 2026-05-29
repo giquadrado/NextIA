@@ -1,0 +1,51 @@
+/* ─────────────────────────────────────────────
+   layout.css  –  Container, grid e helpers de layout
+───────────────────────────────────────────── */
+
+/* ── Container central ── */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+
+/* ── Seção base ── */
+.section {
+  padding-block: var(--space-xl);
+  width: 100%;
+}
+
+
+.hero .container {
+  margin-inline: 0; /* remove centralização */
+}
+
+
+.section .container {
+  max-width: 1200px; /* aumenta bastante */
+}
+
+
+
+/* ── Flex helpers ── */
+.flex          { display: flex; }
+.flex-center   { display: flex; align-items: center; justify-content: center; }
+.flex-between  { display: flex; align-items: center; justify-content: space-between; }
+.flex-col      { display: flex; flex-direction: column; }
+.gap-sm        { gap: var(--space-sm); }
+.gap-md        { gap: var(--space-md); }
+.gap-lg        { gap: var(--space-lg); }
+
+/* ── Visibilidade ── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
