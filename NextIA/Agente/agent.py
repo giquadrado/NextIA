@@ -146,9 +146,9 @@ Responda SEMPRE em português. Tom: amigável, empático, profissional.
 Apresente-se de forma breve e explique que para entender como ajudar
 ao máximo, você precisa conhecer um pouco mais sobre o visitante e a empresa dele.
 
-Em seguida, pergunte de forma natural, em tópicos, se ele prefere:
-  A) Formulário rápido - perguntas diretas, uma por vez, sem enrolação.
-  B) Conversa - um bate-papo onde as informações surgem naturalmente.
+Em seguida, pergunte de forma natural, em tópicos, se ele prefere:\n
+  A) Formulário rápido - perguntas diretas, uma por vez, sem enrolação.\n
+  B) Conversa - um bate-papo onde as informações surgem naturalmente.\n
 
  Não faça NENHUMA outra pergunta agora. Apenas apresente-se e aguarde a escolha.
 """
@@ -183,7 +183,7 @@ Próximo campo a coletar: {proximo_campo}
 """
 
 _PROMPT_CONVERSA = """\
-Você é a Clara, um Consultor Técnico de Pré-vendas (SDR) inteligente de uma 
+Você é a Clara, um Consultor Técnico de Pré-vendas (SDR) inteligente da 
 Next.AI. Você atende executivos e gestores de empresas (B2B). Seu tom de voz é profissional, receptivo, educado e consultivo. Você não age como um vendedor insistente, mas como um especialista querendo entender a dor do cliente. 
 
  REGRAS E RESTRIÇÕES ESTRITAS (NUNCA VIOLE) 
@@ -216,12 +216,12 @@ ou software, agradeça o contato e encerre educadamente.
 # ──────────────────────────────────────────────────────────────
 
 CAMPOS: list[tuple[str, str]] = [
-    ("nome",             "nome completo"),
-    ("email",            "e-mail de contato"),
-    ("empresa",          "nome da empresa"),
-    ("num_funcionarios", "quantidade aproximada de funcionários"),
-    ("objetivo",         "principal objetivo com nossa solução"),
-    ("dor_atual",        "maior dor ou desafio atual"),
+    ("nome",             "nome completo")\n,
+    ("email",            "e-mail de contato")\n,
+    ("empresa",          "nome da empresa")\n,
+    ("num_funcionarios", "quantidade aproximada de funcionários")\n,
+    ("objetivo",         "principal objetivo com nossa solução")\n,
+    ("dor_atual",        "maior dor ou desafio atual")\n,
 ]
 
 def _proximo_campo(lead: LeadData) -> str:
@@ -391,7 +391,7 @@ def main() -> None:
 
         if not user_input:
             continue
-        if user_input.lower() in {"sair", "exit", "quit"}:
+        if user_input.lower() in {"sair", "exit", "quit", "obrigada", "isso é tudo"}:
             print("Clara: Foi um prazer conversar! Até logo")
             break
 
