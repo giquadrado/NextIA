@@ -216,12 +216,12 @@ ou software, agradeça o contato e encerre educadamente.
 # ──────────────────────────────────────────────────────────────
 
 CAMPOS: list[tuple[str, str]] = [
-    ("nome",             "nome completo")\n,
-    ("email",            "e-mail de contato")\n,
-    ("empresa",          "nome da empresa")\n,
-    ("num_funcionarios", "quantidade aproximada de funcionários")\n,
-    ("objetivo",         "principal objetivo com nossa solução")\n,
-    ("dor_atual",        "maior dor ou desafio atual")\n,
+    ("nome",             "nome completo"),
+    ("email",            "e-mail de contato"),
+    ("empresa",          "nome da empresa"),
+    ("num_funcionarios", "quantidade aproximada de funcionários"),
+    ("objetivo",         "principal objetivo com nossa solução"),
+    ("dor_atual",        "maior dor ou desafio atual"),
 ]
 
 def _proximo_campo(lead: LeadData) -> str:
