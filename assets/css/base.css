@@ -1,7 +1,6 @@
 /* ─────────────────────────────────────────────
    base.css  –  Estilos globais / tipografia base
 ───────────────────────────────────────────── */
-
 html {
   font-size: clamp(15px, 1.1vw, 18px);
 }
