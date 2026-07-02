@@ -1,6 +1,7 @@
 /* ─────────────────────────────────────────────
    components.css  –  Componentes reutilizáveis
-   Revisado: tamanhos fluidos e bem proporcionados
+   Mobile-first: estilos base aqui valem para mobile;
+   ajustes de tablet/desktop ficam em responsive.css.
 ───────────────────────────────────────────── */
 
 
@@ -13,27 +14,26 @@
   gap: 0.6rem;
   padding: 0.85rem 1.75rem;
   border-radius: var(--radius-sm);
-  font-size: clamp(1rem, 1.1vw, 1.15rem);
-  font-weight: 600;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  font-weight: 700;
   font-family: var(--font-base);
   line-height: 1;
+  border: 2px solid transparent;
   transition:
     background-color var(--transition-fast),
     box-shadow       var(--transition-fast),
-    transform        var(--transition-fast);
+    transform         var(--transition-fast);
   white-space: nowrap;
   cursor: pointer;
 }
 
 .btn--primary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  min-width: 200px;
+  background-color: var(--color-accent);
+  color: #04140d;
 }
 
 .btn--primary:hover,
 .btn--primary:focus-visible {
-  background-color: #20a690;
   box-shadow: var(--shadow-btn);
   transform: translateY(-2px);
 }
@@ -43,150 +43,493 @@
   box-shadow: none;
 }
 
+.btn--outline {
+  background-color: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  background-color: var(--color-accent-soft);
+  transform: translateY(-2px);
+}
+
 .btn--icon svg { flex-shrink: 0; }
 .btn--full { width: 100%; }
 
 
-/* ══════════════ CARDS ══════════════ */
+/* ══════════════ TAG PILL (ex: "Na prática") ══════════════ */
+
+.tag-pill {
+  display: inline-block;
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-sm);
+}
+
+
+/* ══════════════ CARDS (Onde Atuamos) ══════════════ */
 
 .cards-grid {
   display: grid;
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
   margin-top: var(--space-lg);
-  grid-template-columns: repeat(3, 1fr) !important;
 }
 
 .card {
-  background-color: var(--color-primary-dark);
-  border: 2px solid var(--color-border-glow);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   display: flex;
-  align-items: center;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 0.6rem;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
-  cursor: default;
-  justify-content: flex-start;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(97, 234, 242, 0.18);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
 }
 
 .card__icon {
-  /* placeholder cinza quando sem imagem real */
-  background: rgba(255,255,255,0.08);
-  border-radius: var(--radius-sm);
-  min-height: 56px;
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-
-}
-
-
-.card__text {
-  color: var(--color-white);
-  font-size: var(--text-h3);
-  font-weight: 400;
-  line-height: 1.4;
-  text-align: center;
-}
-
-
-/* ══════════════ STATS ══════════════ */
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--space-lg);
-  margin-top: var(--space-xl);
-  text-align: center;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
-}
-
-.stat img {
-  background: rgba(5,85,80,0.08);
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  background-color: var(--color-accent-soft);
   border-radius: var(--radius-sm);
-  min-height: 56px;
 }
 
-.stat__number,
-.stat__symbol {
-  color: var(--color-primary-dark);
-  font-size: clamp(2.75rem, 5vw, 4.5rem);
-  font-weight: 500;
-  line-height: 1;
-}
-
-.stat__number + .stat__symbol { margin-left: -0.15em; }
-
-.stat__label {
-  color: var(--color-gray);
-  font-size: var(--text-h3);
-  font-weight: 500;
+.card__title {
+  color: var(--color-white);
+  font-size: var(--text-body-lg);
+  font-weight: 700;
+  font-family: var(--font-base);
   line-height: 1.3;
 }
 
+.card__text {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.55;
+}
 
-/* ══════════════ TESTIMONIALS ══════════════ */
+
+/* ══════════════ STATS (Resultados) ══════════════ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+.stat {
+  background-color: var(--color-card-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.stat__number {
+  color: var(--color-accent);
+  font-family: var(--font-condensed);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat__symbol { font-size: 0.7em; }
+
+.stat__label-bold {
+  color: var(--color-white);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stat__label {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+
+/* ══════════════ TESTIMONIALS (Parceiros) ══════════════ */
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-md);
   margin-top: var(--space-xl);
 }
 
 .testimonial {
-  background-color: var(--color-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg) var(--space-md);
-  color: var(--color-white);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   transition: transform var(--transition-base);
 }
 
 .testimonial:hover { transform: translateY(-4px); }
 
-.testimonial p {
-  font-size: clamp(1rem, 1.4vw, 1.4rem);
-  font-style: italic;
-  line-height: 1.6;
-  flex: 1;
-}
-
-.testimonial footer { display: flex; flex-direction: column; gap: 0.2rem; }
-.testimonial footer strong { font-size: var(--text-body-lg); }
-.testimonial footer span  { font-size: var(--text-body-lg); font-weight: 400; }
-
-/* ══════════════ TIMELINE ══════════════ */
-
-.timeline__item {
-  border-radius: var(--radius-lg);
-  padding: var(--space-md) var(--space-lg);
-  font-size: clamp(0.875rem, 1.2vw, 1rem); /* <- era muito grande, causava overflow */
-  line-height: 1.6;
-  flex: 1; /* <- distribui altura igualmente entre os 4 cards */
+.testimonial__header {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
-.timeline__item p {
-  margin: 0;
+.testimonial__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-accent);
+  flex-shrink: 0;
 }
 
-.timeline__item--red    { background-color: var(--color-red); }
-.timeline__item--orange { background-color: var(--color-orange); }
-.timeline__item--yellow { background-color: var(--color-yellow); }
-.timeline__item--green  { background-color: var(--color-green); }
+.testimonial__header strong {
+  display: block;
+  color: var(--color-white);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.testimonial__header span {
+  display: block;
+  color: var(--color-text-dim);
+  font-size: var(--text-xs);
+}
+
+.testimonial p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+
+/* ══════════════ AGENTES EXEMPLO (cards "Bia") ══════════════ */
+
+.agents-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+.agent-card {
+  background-color: var(--color-card-iris);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.agent-card__name {
+  color: var(--color-white);
+  font-size: var(--text-body-lg);
+  font-weight: 700;
+  font-family: var(--font-base);
+}
+
+.agent-card__role {
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.agent-card__desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+
+/* ══════════════ CHECK LIST (Íris) ══════════════ */
+
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  list-style: none;
+  margin: var(--space-md) 0;
+}
+
+.check-list__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--color-white);
+  font-size: var(--text-sm);
+}
+
+.check-list__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  background-color: var(--color-accent);
+  color: #04140d;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+
+/* ══════════════ CHAT MOCK (Íris) ══════════════ */
+
+.chat-mock {
+  background-color: var(--color-card-iris);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-mock__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chat-mock__avatar {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent-soft);
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.chat-mock__header-text { flex: 1; display: flex; flex-direction: column; }
+.chat-mock__header-text strong { color: var(--color-white); font-size: var(--text-sm); }
+.chat-mock__header-text span { color: var(--color-text-dim); font-size: var(--text-xs); }
+.chat-mock__menu { color: var(--color-text-dim); }
+
+.chat-mock__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.chat-mock__bubble {
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  max-width: 92%;
+}
+
+.chat-mock__bubble--bot {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-muted);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-mock__bubble--user {
+  background-color: var(--color-accent);
+  color: #04140d;
+  font-weight: 500;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-mock__status {
+  background-color: rgba(92, 255, 167, 0.08);
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.chat-mock__status p {
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  margin-bottom: 0.5rem;
+}
+
+.chat-mock__progress {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.chat-mock__progress span {
+  display: block;
+  width: 70%;
+  height: 100%;
+  background-color: var(--color-accent);
+}
+
+.chat-mock__input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin: 0 var(--space-md) var(--space-md);
+  padding: 0.7rem 1rem;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.chat-mock__input span:first-child {
+  color: var(--color-text-dim);
+  font-size: var(--text-sm);
+}
+
+.chat-mock__send {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+
+/* ══════════════ HISTORY CARDS (Nossa História) ══════════════ */
+
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.history-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.history-card--active {
+  background-color: var(--color-card-iris);
+  border-color: var(--color-accent);
+}
+
+.history-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.history-card__badge--red   { background-color: var(--color-red); }
+.history-card__badge--green { background-color: var(--color-green); color: #04140d; }
+.history-card__badge--gray  { background-color: var(--color-gray-badge); }
+
+.history-card__title {
+  color: var(--color-white);
+  font-size: var(--text-body-lg);
+  font-weight: 700;
+  font-family: var(--font-base);
+  margin-bottom: 0.4rem;
+}
+
+.history-card__desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+
+/* ══════════════ FORM CARD (CTA Clara) ══════════════ */
+
+.form-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.form-card__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+}
+
+.form-group {
+  margin-bottom: var(--space-sm);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  color: var(--color-white);
+  font-family: var(--font-base);
+  font-size: var(--text-sm);
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-text-dim);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.form-group input.is-invalid,
+.form-group textarea.is-invalid {
+  border-color: var(--color-red);
+}
+
+.form-error {
+  display: block;
+  color: var(--color-red);
+  font-size: var(--text-xs);
+  margin-top: 0.3rem;
+  min-height: 1em;
+}
+
+.form-card .btn { margin-top: var(--space-xs); }
