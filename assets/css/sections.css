@@ -268,7 +268,7 @@
   align-items: center;
 
   width: 100%;
-  height: 100%;
+  min-height: 400px;
 
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
@@ -282,12 +282,11 @@
 }
 
 .cta-final__image {
-  width: 200%;
-  height: 200%;
+  width: 100%;
+  height: 100%;
 
-  object-fit: contain;
-  object-position: center bottom;
-
+  object-fit: cover;
+  object-position: center;
 }
 
 .cta-final__title {
