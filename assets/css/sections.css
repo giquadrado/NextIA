@@ -96,10 +96,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background:
-    radial-gradient(60% 50% at 70% 20%, var(--color-accent-dark) 0%, transparent 70%),
-    radial-gradient(50% 60% at 30% 80%, #142626 0%, transparent 70%),
-    var(--color-bg);
+  background-image: url("../assets/images/BC-hero.png");
 }
 
 .hero__content {
