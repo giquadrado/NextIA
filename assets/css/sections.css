@@ -282,10 +282,11 @@
 }
 
 .cta-final__image {
-  width: 100%;
+  width: auto;
   height: 100%;
+  max-width: 100%;
 
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
