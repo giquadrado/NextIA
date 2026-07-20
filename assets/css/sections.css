@@ -246,6 +246,24 @@
   color: var(--color-text-muted);
   font-size: var(--text-small);
 }
+
+.agents-showcase__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .agents-showcase__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .agents-showcase__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 /* ══════════════ NOSSA HISTÓRIA ══════════════ */
 
 .historia {
