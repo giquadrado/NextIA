@@ -183,95 +183,81 @@
 </div>
 </section>
 <!-- ════════════════════════════════════ EXEMPLOS DE AGENTES ═══════════════════════════════ -->
-<section class="section agentes-exemplo" id="agentes" aria-labelledby="agentes-title">
-<div class="container">
-<p class="section__eyebrow--green" id="agentes-title">Exemplos de agentes em operação</p>
-<p class="section__subtitle-main">
-         Agentes de IA aplicados para ganhar velocidade,<br class="hide-mobile" />
-         reduzir tarefas manuais e melhorar decisões.
-</p>
-<div class="agents-grid" role="list">
-<article class="agent-card" role="listitem">
-<h3 class="agent-card__name">Bia</h3>
-<p class="agent-card__role">Agente de Atendimento ao Cliente</p>
-<p class="agent-card__desc">Responde dúvidas frequentes, organiza solicitações e encaminha casos complexos.</p>
-</article>
-<article class="agent-card" role="listitem">
-<h3 class="agent-card__name">Bia</h3>
-<p class="agent-card__role">Agente de Atendimento ao Cliente</p>
-<p class="agent-card__desc">Responde dúvidas frequentes, organiza solicitações e encaminha casos complexos.</p>
-</article>
-<article class="agent-card" role="listitem">
-<h3 class="agent-card__name">Bia</h3>
-<p class="agent-card__role">Agente de Atendimento ao Cliente</p>
-<p class="agent-card__desc">Responde dúvidas frequentes, organiza solicitações e encaminha casos complexos.</p>
-</article>
-<article class="agent-card" role="listitem">
-<h3 class="agent-card__name">Bia</h3>
-<p class="agent-card__role">Agente de Atendimento ao Cliente</p>
-<p class="agent-card__desc">Responde dúvidas frequentes, organiza solicitações e encaminha casos complexos.</p>
-</article>
-</div>
-</div>
+<section class="section agents-showcase" id="agentes" aria-labelledby="agents-title">
+  <div class="container">
+    <h2 class="agents-showcase__title" id="agents-title">Exemplos de agentes em operação</h2>
+    <p class="agents-showcase__subtitle">
+      Agentes de IA aplicados para ganhar velocidade, reduzir tarefas manuais e melhorar decisões.
+    </p>
+
+    <div class="agents-showcase__grid" id="agents-grid">
+      <button class="agent-card is-active" type="button" data-agent="nina">
+        <h3 class="agent-card__name">Nina</h3>
+        <p class="agent-card__role">Agente Financeiro</p>
+        <p class="agent-card__desc">Concilia lançamentos, monitora fluxo de caixa e antecipa inadimplência.</p>
+      </button>
+
+      <button class="agent-card" type="button" data-agent="leo">
+        <h3 class="agent-card__name">Léo</h3>
+        <p class="agent-card__role">Agente de Vendas (SDR)</p>
+        <p class="agent-card__desc">Qualifica leads, agenda reuniões e reengaja oportunidades no funil.</p>
+      </button>
+
+      <button class="agent-card" type="button" data-agent="sofia">
+        <h3 class="agent-card__name">Sofia</h3>
+        <p class="agent-card__role">Agente de RH & Recrutamento</p>
+        <p class="agent-card__desc">Triagem de currículos, agendamento de entrevistas, feedback organizado.</p>
+      </button>
+
+      <button class="agent-card" type="button" data-agent="maya">
+        <h3 class="agent-card__name">Maya</h3>
+        <p class="agent-card__role">Agente de Logística & Estoque</p>
+        <p class="agent-card__desc">Rastreia pedidos, prevê ruptura de estoque e antecipa atrasos.</p>
+      </button>
+    </div>
+  </div>
 </section>
-<!-- ══════════════════════════════════════ ÍRIS (NA PRÁTICA) ══════════════════════════════ -->
-<section class="section iris-pratica" aria-labelledby="iris-title">
-<div class="container iris-pratica__grid">
-<div class="iris-pratica__info">
-<p class="tag-pill">Na prática</p>
-<h2 class="iris-pratica__title" id="iris-title">
-           Conheça a <span class="text--accent">Íris</span>: Sua nova assistente médica
-</h2>
-<p class="iris-pratica__desc">
-           Desenvolvemos a Íris para revolucionar o atendimento na saúde. Integrada a
-           prontuários e protocolos clínicos, ela tria, orienta e escala o cuidado com
-           precisão cirúrgica.
-</p>
-<ul class="check-list" role="list">
-<li class="check-list__item">
-<span class="check-list__icon" aria-hidden="true">✓</span>
-             Análise de exames e laudos em segundos
-</li>
-<li class="check-list__item">
-<span class="check-list__icon" aria-hidden="true">✓</span>
-             Agendamento inteligente por voz e texto
-</li>
-<li class="check-list__item">
-<span class="check-list__icon" aria-hidden="true">✓</span>
-             Suporte à decisão clínica baseada em evidências
-</li>
-</ul>
-<a href="#contato" class="btn btn--outline">Falar com a Íris</a>
-</div>
-<div class="chat-mock" aria-hidden="true">
-<header class="chat-mock__header">
-<span class="chat-mock__avatar">🩺</span>
-<div class="chat-mock__header-text">
-<strong>Protocolo #8821</strong>
-<span>Processamento ativo...</span>
-</div>
-<span class="chat-mock__menu">⋯</span>
-</header>
-<div class="chat-mock__body">
-<p class="chat-mock__bubble chat-mock__bubble--bot">
-             Olá, identifiquei um aumento de 15% na taxa de desistência de consultas
-             eletivas este mês. Deseja que eu inicie o protocolo de reengajamento via
-             WhatsApp?
-</p>
-<p class="chat-mock__bubble chat-mock__bubble--user">
-             Sim, Íris. Priorize pacientes com exames pendentes.
-</p>
-<div class="chat-mock__status">
-<p>Entendido. 42 pacientes selecionados. Iniciando automação...</p>
-<div class="chat-mock__progress"><span></span></div>
-</div>
-</div>
-<div class="chat-mock__input">
-<span>Digite um comando...</span>
-<span class="chat-mock__send">▶</span>
-</div>
-</div>
-</div>
+
+<!-- ═══════════ DETALHE DO AGENTE (dinâmico) ═══════════ -->
+<section class="section agent-detail" id="agent-detail-section" aria-live="polite">
+  <div class="container agent-detail__grid">
+
+    <div class="agent-detail__panel">
+      <span class="agent-detail__tag">NA PRÁTICA</span>
+      <h2 class="agent-detail__title">
+        Conheça <span id="agent-detail-article">a</span>
+        <span class="text--accent" id="agent-detail-name">Nina</span>:
+        <span id="agent-detail-tagline">Sua assistente financeira</span>
+      </h2>
+      <p class="agent-detail__desc" id="agent-detail-desc"></p>
+      <ul class="agent-detail__checklist" id="agent-detail-checklist"></ul>
+      <button class="btn btn--outline" id="agent-detail-cta">Falar com a Nina</button>
+    </div>
+
+    <div class="agent-detail__chat">
+      <div class="chat-mock__header">
+        <div class="chat-mock__avatar" id="agent-detail-avatar" aria-hidden="true">💰</div>
+        <div>
+          <p class="chat-mock__protocol" id="agent-detail-protocol">Protocolo #4432</p>
+          <p class="chat-mock__status" id="agent-detail-status">Processamento ativo...</p>
+        </div>
+        <span class="chat-mock__menu" aria-hidden="true">•••</span>
+      </div>
+
+      <div class="chat-mock__bubble chat-mock__bubble--agent" id="agent-detail-msg1"></div>
+      <div class="chat-mock__bubble chat-mock__bubble--user" id="agent-detail-msg2"></div>
+      <div class="chat-mock__bubble chat-mock__bubble--agent">
+        <p id="agent-detail-msg3"></p>
+        <div class="chat-mock__progress"><span></span></div>
+      </div>
+
+      <div class="chat-mock__input">
+        <span>Digite um comando...</span>
+        <button aria-label="Enviar">▶</button>
+      </div>
+    </div>
+
+  </div>
 </section>
 <!-- ══════════════════════════════════════ NOSSA HISTÓRIA ═════════════════════════════════ -->
 <section class="section historia" id="metodologia" aria-labelledby="historia-title">
