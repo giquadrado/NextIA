@@ -237,6 +237,27 @@
   line-height: 1.6;
 }
 
+.agent-detail__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 900px) {
+  .agent-detail__grid {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .agent-detail__panel {
+    flex: 1;
+  }
+
+  .agent-detail__chat {
+    flex: 1;
+  }
+}
+
 .chat-mock__protocol {
   color: var(--color-white);
   font-weight: 600;
