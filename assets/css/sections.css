@@ -205,107 +205,46 @@
 .parceiros { background-color: var(--color-bg-alt); }
 
 
-.agents-showcase__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
-}
-
-.agent-card {
-  cursor: pointer;
-  text-align: left;
-  background-color: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
-}
-
-.agent-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--color-accent);
-}
-
-.agent-card.is-active {
-  border-color: var(--color-accent);
-  background-color: rgba(52, 211, 153, 0.08); /* ajuste conforme sua var de accent em rgba */
-}
-
-.agent-card__name {
+.agents-showcase__title {
   color: var(--color-white);
+  font-size: var(--text-h2);
   font-weight: 700;
-  margin-bottom: 4px;
 }
 
-.agent-card__role {
+.agents-showcase__subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+}
+
+.agent-detail__tag {
   color: var(--color-accent);
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--text-small);
-  margin-bottom: var(--space-xs);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.agent-card__desc {
+.agent-detail__title {
+  color: var(--color-white);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  margin: var(--space-xs) 0 var(--space-sm);
+}
+
+.agent-detail__desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.chat-mock__protocol {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.chat-mock__status {
   color: var(--color-text-muted);
   font-size: var(--text-small);
-  font-style: italic;
-}
-
-/* ── Painel de detalhe ── */
-.agent-detail__grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-}
-
-.agent-detail__panel,
-.agent-detail__chat {
-  transition: opacity .2s ease;
-}
-
-.agent-detail__panel.is-updating,
-.agent-detail__chat.is-updating {
-  opacity: 0;
-}
-
-.agent-detail__checklist {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-md) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  color: var(--color-white);
-}
-
-.chat-mock__bubble {
-  background-color: var(--color-bg-alt);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
-  margin-bottom: var(--space-sm);
-  color: var(--color-white);
-}
-
-.chat-mock__bubble--user {
-  background-color: var(--color-accent);
-  color: #06231a; /* texto escuro sobre fundo verde, ajuste conforme contraste */
-  margin-left: auto;
-  max-width: 80%;
-}
-
-.chat-mock__progress {
-  height: 4px;
-  background-color: rgba(255,255,255,0.1);
-  border-radius: 999px;
-  margin-top: var(--space-xs);
-  overflow: hidden;
-}
-
-.chat-mock__progress span {
-  display: block;
-  height: 100%;
-  width: 70%; /* ajustável por agente, se quiser variar */
-  background-color: var(--color-accent);
 }
 /* ══════════════ NOSSA HISTÓRIA ══════════════ */
 
