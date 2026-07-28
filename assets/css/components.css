@@ -109,6 +109,13 @@
   background-color: var(--color-accent-soft);
   border-radius: var(--radius-sm);
 }
+.card__icon svg,
+.form-card__icon svg,
+.chat-mock__avatar svg {
+  width: 28px;
+  height: 28px;
+  color: var(--color-primary); /* ajuste pro nome real da sua variável */
+}
 
 .card__title {
   color: var(--color-white);
