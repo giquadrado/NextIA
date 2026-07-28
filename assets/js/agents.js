@@ -3,13 +3,13 @@ const agentsData = {
     article: 'a',
     name: 'Nina',
     tagline: 'Sua assistente financeira',
-    desc: 'Desenvolvemos a Nina para automatizar a rotina financeira. Integrada a ERPs e planilhas, ela concilia lançamentos, monitora fluxo de caixa e alerta desvios antes que virem problema.',
+    desc: 'Imagine um agente assim dentro da sua rotina financeira: integrado ao seu ERP e às suas planilhas, conciliando lançamentos, acompanhando o fluxo de caixa e alertando desvios antes que virem problema. É esse tipo de solução que construímos sob medida pra sua empresa.',
     checklist: [
       'Conciliação bancária automática',
       'Previsão de fluxo de caixa em tempo real',
       'Alertas de inadimplência e vencimentos'
     ],
-    ctaText: 'Falar com a Nina',
+    ctaText: 'Criar meu agente financeiro',
     avatar: '💰',
     protocol: 'Protocolo #4432',
     status: 'Processamento ativo...',
@@ -21,13 +21,13 @@ const agentsData = {
     article: 'o',
     name: 'Léo',
     tagline: 'Seu assistente de vendas',
-    desc: 'Desenvolvemos o Léo para acelerar a pré-venda. Integrado ao CRM, ele qualifica leads, agenda reuniões e reengaja oportunidades esquecidas com base no histórico de interação.',
+    desc: 'Imagine um agente assim cuidando da sua pré-venda: integrado ao seu CRM, qualificando leads, agendando reuniões e reengajando oportunidades que ficariam esquecidas no funil. Podemos construir esse agente pra sua operação de vendas.',
     checklist: [
       'Qualificação automática de leads (lead scoring)',
       'Agendamento de reuniões via WhatsApp e e-mail',
       'Reengajamento de oportunidades paradas no funil'
     ],
-    ctaText: 'Falar com o Léo',
+    ctaText: 'Criar meu agente de vendas',
     avatar: '📈',
     protocol: 'Protocolo #7715',
     status: 'Monitorando funil...',
@@ -39,13 +39,13 @@ const agentsData = {
     article: 'a',
     name: 'Sofia',
     tagline: 'Sua assistente de recrutamento',
-    desc: 'Desenvolvemos a Sofia para agilizar a triagem de candidatos. Integrada aos sistemas de recrutamento, ela analisa currículos, agenda entrevistas e organiza feedback do time.',
+    desc: 'Imagine um agente assim agilizando o seu recrutamento: analisando currículos, agendando entrevistas e organizando o feedback do time em um só lugar. É esse tipo de agente que construímos sob medida pra sua área de RH.',
     checklist: [
       'Triagem de currículos por compatibilidade com a vaga',
       'Agendamento automático de entrevistas',
       'Organização de feedback dos entrevistadores'
     ],
-    ctaText: 'Falar com a Sofia',
+    ctaText: 'Criar meu agente de RH',
     avatar: '🧑‍💼',
     protocol: 'Protocolo #2290',
     status: 'Triagem em andamento...',
@@ -57,13 +57,13 @@ const agentsData = {
     article: 'a',
     name: 'Maya',
     tagline: 'Sua assistente de logística',
-    desc: 'Desenvolvemos a Maya para dar visibilidade à operação logística. Integrada ao WMS e transportadoras, ela rastreia pedidos, prevê rupturas de estoque e antecipa atrasos na entrega.',
+    desc: 'Imagine um agente assim monitorando sua logística: rastreando pedidos, antecipando rupturas de estoque e sinalizando atrasos antes que cheguem ao seu cliente. Podemos construir esse agente pra sua operação.',
     checklist: [
       'Rastreamento de pedidos em tempo real',
       'Previsão de ruptura de estoque',
       'Alertas automáticos de atraso na entrega'
     ],
-    ctaText: 'Falar com a Maya',
+    ctaText: 'Criar meu agente de logística',
     avatar: '📦',
     protocol: 'Protocolo #5561',
     status: 'Monitorando rotas...',
