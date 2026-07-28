@@ -223,7 +223,16 @@
 }
 
 .agents-showcase__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
   margin-top: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .agents-showcase__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .agent-detail__checklist {
@@ -264,6 +273,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
+}
+
+.agent-detail__panel,
+.agent-detail__chat {
+  transition: opacity 200ms ease;
+}
+
+.agent-detail__panel.is-updating,
+.agent-detail__chat.is-updating {
+  opacity: 0.35;
 }
 
 @media (min-width: 900px) {
