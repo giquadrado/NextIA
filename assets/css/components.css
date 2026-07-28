@@ -243,6 +243,29 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-md);
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.agent-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.agent-card.is-active {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}
+
+.agent-card.is-active .agent-card__name {
+  color: var(--color-accent);
 }
 
 .agent-card__name {
