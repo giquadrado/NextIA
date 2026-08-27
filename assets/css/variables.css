@@ -1,62 +1,126 @@
-/* ─────────────────────────────────────────────
-   variables.css – Design Tokens
-   Identidade visual: Algar + NextIA
-───────────────────────────────────────────── */
-
 :root {
-  /* ── Paleta de cores – Algar ── */
 
-  /* Fundos */
-  --color-bg:             #002B3D;   /* Azul institucional Algar */
-  --color-bg-alt:         #001F2D;   /* Azul ainda mais profundo */
-  
-  /* Superfícies / Cards */
-  --color-card:           #063B49;   /* Azul petróleo */
-  --color-card-alt:       #0A4A52;   /* Verde/azul para stats */
-  --color-card-iris:      #0A645A;   /* Verde Algar */
+  /* ══════════════════════════════════════════════
+     CORES — IDENTIDADE ALGAR
+  ══════════════════════════════════════════════ */
 
-  /* Bordas */
-  --color-border:         rgba(40, 190, 165, 0.22);
+  /* Cor principal */
+  --color-accent:        #28BEA5;
 
-  /* ── Cores principais da marca ── */
-  --color-accent:         #28BEA5;   /* Turquesa Algar */
-  --color-accent-dark:    #0A645A;   /* Verde escuro Algar */
-  --color-accent-soft:    rgba(40, 190, 165, 0.12);
+  /* Verde institucional */
+  --color-accent-dark:   #0A645A;
 
-  /* Estados / feedback */
-  --color-red:            #FA5975;
-  --color-orange:         #FF9653;
-  --color-yellow:         #F2C34F;
-  --color-green:          #28BEA5;
-  --color-gray-badge:     #31515B;
+  /* Azul institucional */
+  --color-primary:       #002B3D;
 
-  /* ── Neutros / texto ── */
-  --color-white:          #FFFFFF;
+  /* Fundo claro */
+  --color-light:         #FFEFE4;
 
-  /* Texto principal com leve tom quente da paleta */
-  --color-text-muted:     #B8D0D2;
-  --color-text-dim:       #82A5AA;
-
-  /* Cor clara da identidade */
-  --color-light:          #FFEFE4;
+  /* Branco */
+  --color-white:         #FFFFFF;
 
 
-  /* ── Tipografia ── */
-  --font-condensed:       'Roboto Condensed', sans-serif;
-  --font-base:            'Roboto', sans-serif;
+  /* ══════════════════════════════════════════════
+     FUNDOS
+  ══════════════════════════════════════════════ */
+
+  --color-bg:            #FFFFFF;
+
+  --color-bg-alt:        #FFEFE4;
+
+  --color-bg-dark:       #002B3D;
+
+  --color-bg-green:      #0A645A;
 
 
-  /* ── Escala tipográfica ── */
+  /* ══════════════════════════════════════════════
+     CARDS
+  ══════════════════════════════════════════════ */
+
+  --color-card:          #FFFFFF;
+
+  --color-card-alt:      #F4F8F7;
+
+  --color-card-dark:     #0A645A;
+
+  --color-card-primary:  #002B3D;
+
+
+  /* ══════════════════════════════════════════════
+     BORDAS
+  ══════════════════════════════════════════════ */
+
+  --color-border:        rgba(0, 43, 61, 0.12);
+
+  --color-border-accent: rgba(40, 190, 165, 0.30);
+
+
+  /* ══════════════════════════════════════════════
+     DESTAQUES
+  ══════════════════════════════════════════════ */
+
+  --color-accent-soft:   rgba(40, 190, 165, 0.12);
+
+  --color-accent-hover:  #0A645A;
+
+
+  /* ══════════════════════════════════════════════
+     ESTADOS
+  ══════════════════════════════════════════════ */
+
+  --color-red:           #FA5975;
+  --color-orange:        #FF9653;
+  --color-yellow:        #F2C34F;
+  --color-green:         #28BEA5;
+
+  --color-gray-badge:    #DDE9E7;
+
+
+  /* ══════════════════════════════════════════════
+     TEXTOS
+  ══════════════════════════════════════════════ */
+
+  --color-text:          #002B3D;
+
+  --color-text-muted:    #496A70;
+
+  --color-text-dim:      #729095;
+
+  --color-text-light:    #FFFFFF;
+
+
+  /* ══════════════════════════════════════════════
+     TIPOGRAFIA
+  ══════════════════════════════════════════════ */
+
+  --font-condensed:      'Roboto Condensed', sans-serif;
+
+  --font-base:           'Roboto', sans-serif;
+
+
+  /* ══════════════════════════════════════════════
+     ESCALA TIPOGRÁFICA
+  ══════════════════════════════════════════════ */
+
   --text-hero:      clamp(2rem, 4vw + 0.5rem, 3.25rem);
+
   --text-h2:        clamp(1.5rem, 2.2vw + 0.5rem, 2.1rem);
+
   --text-h3:        clamp(1.15rem, 1.6vw + 0.25rem, 1.5rem);
+
   --text-body-lg:   clamp(1rem, 1.1vw + 0.2rem, 1.15rem);
+
   --text-body:      1rem;
+
   --text-sm:        0.875rem;
+
   --text-xs:        0.75rem;
 
 
-  /* ── Espaçamento ── */
+  /* ══════════════════════════════════════════════
+     ESPAÇAMENTO
+  ══════════════════════════════════════════════ */
+
   --space-xs:   0.5rem;
   --space-sm:   0.75rem;
   --space-md:   1.25rem;
@@ -65,37 +129,59 @@
   --space-2xl:  4.5rem;
 
 
-  /* ── Layout ── */
-  --container-max:   1200px;
-  --container-px:    clamp(1.25rem, 4vw, 5rem);
+  /* ══════════════════════════════════════════════
+     LAYOUT
+  ══════════════════════════════════════════════ */
+
+  --container-max: 1200px;
+
+  --container-px: clamp(1.25rem, 4vw, 5rem);
 
 
-  /* ── Bordas ── */
+  /* ══════════════════════════════════════════════
+     BORDAS
+  ══════════════════════════════════════════════ */
+
   --radius-sm:   8px;
   --radius-md:   14px;
   --radius-lg:   20px;
   --radius-pill: 999px;
 
 
-  /* ── Sombras ── */
+  /* ══════════════════════════════════════════════
+     SOMBRAS
+  ══════════════════════════════════════════════ */
+
   --shadow-card:
-    0 4px 24px rgba(0, 0, 0, 0.25);
+    0 4px 24px rgba(0, 43, 61, 0.10);
 
   --shadow-btn:
     0 4px 20px rgba(40, 190, 165, 0.30);
 
 
-  /* ── Transições ── */
+  /* ══════════════════════════════════════════════
+     TRANSIÇÕES
+  ══════════════════════════════════════════════ */
+
   --transition-fast:   150ms ease;
+
   --transition-base:   300ms ease;
+
   --transition-slow:   500ms ease;
 
 
-  /* ── Navbar ── */
+  /* ══════════════════════════════════════════════
+     NAVBAR
+  ══════════════════════════════════════════════ */
+
   --navbar-height: 76px;
 
 
-  /* ── Breakpoints ── */
+  /* ══════════════════════════════════════════════
+     BREAKPOINTS
+  ══════════════════════════════════════════════ */
+
   --bp-tablet:  768px;
+
   --bp-desktop: 1024px;
 }
