@@ -5,106 +5,48 @@
 :root {
   /* ── Paleta de cores – Algar ── */
   /* Fundos */
-  --color-bg:             #002B3D;   /* Azul institucional Algar */
-  --color-bg-alt:         #001F2D;   /* Azul ainda mais profundo */
-  
+  --color-bg:             
+#002B3D;   /* Azul institucional Algar */
+  --color-bg-alt:         
+#001F2D;   /* Azul ainda mais profundo */
+
   /* Superfícies / Cards */
-  --color-card:           #063B49;   /* Azul petróleo */
-  --color-card-alt:       #0A4A52;   /* Verde/azul para stats */
-  --color-card-iris:      #0A645A;   /* Verde Algar */
+  --color-card:           
+#063B49;   /* Azul petróleo */
+  --color-card-alt:       
+#0A4A52;   /* Verde/azul para stats */
+  --color-card-iris:      
+#0A645A;   /* Verde Algar */
   /* Bordas */
   --color-border:         rgba(40, 190, 165, 0.22);
   /* ── Cores principais da marca ── */
-  --color-accent:         #28BEA5;   /* Turquesa Algar */
-  --color-accent-dark:    #239687;   /* Cor de botão Algar (confirmada) — antes: #0A645A */
+  --color-accent:         
+#28BEA5;   /* Turquesa Algar */
+  --color-accent-dark:    
+#0A645A;   /* Verde escuro Algar */
   --color-accent-soft:    rgba(40, 190, 165, 0.12);
   /* Estados / feedback */
-  --color-red:            #FA5975;
-  --color-orange:         #FF9653;
-  --color-yellow:         #F2C34F;
-  --color-green:          #28BEA5;
-  --color-gray-badge:     #31515B;
+  --color-red:            
+#FA5975;
+  --color-orange:         
+#FF9653;
+  --color-yellow:         
+#F2C34F;
+  --color-green:          
+#28BEA5;
+  --color-gray-badge:     
+#31515B;
   /* ── Neutros / texto ── */
-  --color-white:          #FFFFFF;
+  --color-white:          
+#FFFFFF;
   /* Texto principal com leve tom quente da paleta */
-  --color-text-muted:     #B8D0D2;
-  --color-text-dim:       #82A5AA;
+  --color-text-muted:     
+#B8D0D2;
+  --color-text-dim:       
+#82A5AA;
   /* Cor clara da identidade */
-  --color-light:          #C8FF50;   /* Cor de elementos Algar (confirmada) — antes: #FFEFE4. Usar só em ícones/badges/detalhes pontuais, não em texto corrido nem fundo grande */
-  /* ── Tipografia ── */
-  --font-condensed:       'Roboto Condensed', sans-serif;
-  --font-base:            'Roboto', sans-serif;
-  /* ── Escala tipográfica ── */
-  --text-hero:      clamp(2rem, 4vw + 0.5rem, 3.25rem);
-  --text-h2:        clamp(1.5rem, 2.2vw + 0.5rem, 2.1rem);
-  --text-h3:        clamp(1.15rem, 1.6vw + 0.25rem, 1.5rem);
-  --text-body-lg:   clamp(1rem, 1.1vw + 0.2rem, 1.15rem);
-  --text-body:      1rem;
-  --text-sm:        0.875rem;
-  --text-xs:        0.75rem;
-  /* ── Espaçamento ── */
-  --space-xs:   0.5rem;
-  --space-sm:   0.75rem;
-  --space-md:   1.25rem;
-  --space-lg:   2rem;
-  --space-xl:   3rem;
-  --space-2xl:  4.5rem;
-  /* ── Layout ── */
-  --container-max:   1200px;
-  --container-px:    clamp(1.25rem, 4vw, 5rem);
-  /* ── Bordas ── */
-  --radius-sm:   8px;
-  --radius-md:   14px;
-  --radius-lg:   20px;
-  --radius-pill: 999px;
-  /* ── Sombras ── */
-  --shadow-card:
-    0 4px 24px rgba(0, 0, 0, 0.25);
-  --shadow-btn:
-    0 4px 20px rgba(40, 190, 165, 0.30);
-  /* ── Transições ── */
-  --transition-fast:   150ms ease;
-  --transition-base:   300ms ease;
-  --transition-slow:   500ms ease;
-  /* ── Navbar ── */
-  --navbar-height: 76px;
-  /* ── Breakpoints ── */
-  --bp-tablet:  768px;
-  --bp-desktop: 1024px;
-}
-/* ─────────────────────────────────────────────
-   variables.css – Design Tokens
-   Identidade visual: Algar + NextIA
-───────────────────────────────────────────── */
-:root {
-  /* ── Paleta de cores – Algar ── */
-  /* Fundos */
-  --color-bg:             #002B3D;   /* Azul institucional Algar */
-  --color-bg-alt:         #001F2D;   /* Azul ainda mais profundo */
-  
-  /* Superfícies / Cards */
-  --color-card:           #063B49;   /* Azul petróleo */
-  --color-card-alt:       #0A4A52;   /* Verde/azul para stats */
-  --color-card-iris:      #0A645A;   /* Verde Algar */
-  /* Bordas */
-  --color-border:         rgba(40, 190, 165, 0.22);
-  /* ── Cores principais da marca ── */
-  --color-accent:         #28BEA5;   /* Turquesa Algar */
-  --color-accent-dark:    #239687;   /* Cor de botão Algar (confirmada) — antes: #0A645A */
-  --color-accent-soft:    rgba(40, 190, 165, 0.12);
-  /* Estados / feedback */
-  --color-red:            #FA5975;
-  --color-orange:         #FF9653;
-  --color-yellow:         #F2C34F;
-  --color-green:          #28BEA5;
-  --color-gray-badge:     #31515B;
-  /* ── Neutros / texto ── */
-  --color-white:          #FFFFFF;
-  /* Texto principal com leve tom quente da paleta */
-  --color-text-muted:     #B8D0D2;
-  --color-text-dim:       #82A5AA;
-  /* Cor clara da identidade */
-  --color-light:          #C8FF50;   /* Cor de elementos Algar (confirmada) — antes: #FFEFE4. Usar só em ícones/badges/detalhes pontuais, não em texto corrido nem fundo grande */
+  --color-light:          
+#FFEFE4;
   /* ── Tipografia ── */
   --font-condensed:       'Roboto Condensed', sans-serif;
   --font-base:            'Roboto', sans-serif;
