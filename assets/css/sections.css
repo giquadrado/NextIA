@@ -5,7 +5,7 @@
   top: 0; left: 0; right: 0;
   z-index: 100;
   height: var(--navbar-height);
-  background-color: var(--color-bg);
+  background-color: var(--color-header-bg); /* AJUSTADO — era --color-bg; navbar continua escura (petróleo) mesmo no tema claro */
   border-bottom: 1px solid var(--color-border);
   transition: box-shadow var(--transition-base);
 }
@@ -22,6 +22,8 @@
 
 .navbar__logo { flex-shrink: 0; }
 .navbar__logo img { height: 38px; width: auto; object-fit: contain; }
+/* Nota: se a logo for um PNG/SVG branco, ela deve voltar a aparecer normalmente
+   agora que o header ficou escuro de novo. Não precisa trocar o arquivo de logo aqui. */
 
 .navbar__nav { display: none; }
 
@@ -33,7 +35,7 @@
 }
 
 .navbar__link {
-  color: var(--color-white);
+  color: var(--color-header-text); /* AJUSTADO — era --color-white; agora explícito que é texto sobre header escuro */
   font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -58,7 +60,7 @@
 .navbar__hamburger span {
   display: block;
   width: 24px; height: 2px;
-  background-color: var(--color-white);
+  background-color: var(--color-header-text); /* AJUSTADO — era --color-white */
   border-radius: 2px;
   transition: transform var(--transition-base), opacity var(--transition-base);
 }
@@ -68,7 +70,7 @@
   position: absolute;
   top: var(--navbar-height);
   left: 0; right: 0;
-  background-color: var(--color-bg);
+  background-color: var(--color-header-bg); /* AJUSTADO — era --color-bg; menu mobile mantém o mesmo escuro do header */
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-md) var(--container-px);
 }
@@ -82,6 +84,9 @@
 
 
 /* ══════════════ HERO ══════════════ */
+/* O hero continua com imagem + overlay escuro — isso é comum mesmo em sites
+   de tema claro (a própria Algar usa fotos com overlay escuro no banner).
+   Só ajustei o tom do overlay pra ficar consistente com o petróleo da marca. */
 
 .hero {
   position: relative;
@@ -109,12 +114,12 @@
 
   background: linear-gradient(
     90deg,
-    rgba(8, 12, 24, 0.92) 0%,
-    rgba(8, 12, 24, 0.82) 20%,
-    rgba(8, 12, 24, 0.55) 40%,
-    rgba(8, 12, 24, 0.20) 65%,
-    rgba(8, 12, 24, 0.00) 100%
-  );
+    rgba(11, 42, 40, 0.92) 0%,
+    rgba(11, 42, 40, 0.82) 20%,
+    rgba(11, 42, 40, 0.55) 40%,
+    rgba(11, 42, 40, 0.20) 65%,
+    rgba(11, 42, 40, 0.00) 100%
+  ); /* AJUSTADO — overlay tingido de petróleo (11,42,40) em vez de azul-marinho neutro (8,12,24) */
 }
 
 .hero__content {
@@ -127,7 +132,7 @@
 .hero__title {
   font-size: var(--text-hero);
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-text-inverse); /* AJUSTADO — era --color-white; mesmo valor, mas semanticamente correto (texto sobre fundo escuro) */
   line-height: 1.1;
   margin-bottom: var(--space-md);
   opacity: 0;
@@ -136,7 +141,7 @@
 }
 
 .hero__subtitle {
-  color: var(--color-text-muted);
+  color: var(--color-text-inverse-muted); /* AJUSTADO — era --color-text-muted, que agora é escuro; aqui precisa do token NOVO claro */
   font-size: var(--text-body-lg);
   font-weight: 400;
   font-family: var(--font-base);
@@ -165,7 +170,7 @@
 
 .section__title-main {
   text-align: center;
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white; seção agora é clara */
   font-size: var(--text-h2);
   font-weight: 700;
   margin-bottom: 0.6rem;
@@ -206,7 +211,7 @@
 
 
 .agents-showcase__title {
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white */
   font-size: var(--text-h2);
   font-weight: 700;
   text-align: center;         
@@ -245,7 +250,7 @@
 }
 
 .agent-detail__checklist li {
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white */
 }
 
 .agent-detail__tag {
@@ -257,7 +262,7 @@
 }
 
 .agent-detail__title {
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white */
   font-size: var(--text-h2);
   font-weight: 700;
   margin: var(--space-xs) 0 var(--space-sm);
@@ -300,8 +305,12 @@
   }
 }
 
+/* ⚠️ ATENÇÃO: .chat-mock__* abaixo também está definido em components.css
+   com regras diferentes. Ajustei os dois pro tema claro, mas recomendo
+   unificar num só arquivo depois pra evitar conflito de especificidade. */
+
 .chat-mock__protocol {
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white; card do chat agora é claro */
   font-weight: 600;
 }
 
@@ -328,7 +337,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(11, 42, 40, 0.06); /* AJUSTADO — era rgba(255,255,255,.06) */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,7 +354,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(11, 42, 40, 0.04); /* AJUSTADO — era rgba(255,255,255,.04) */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
@@ -361,12 +370,12 @@
 }
 
 .chat-mock__bubble {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(11, 42, 40, 0.05); /* AJUSTADO — era rgba(255,255,255,.05) */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
   margin-bottom: var(--space-sm);
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white */
 }
 
 .chat-mock__bubble--agent {
@@ -375,7 +384,7 @@
 
 .chat-mock__bubble--user {
   background-color: var(--color-accent);
-  color: #06231a;
+  color: #04140d; /* AJUSTADO — era #06231a; padronizei com o mesmo tom escuro usado em botões/badges no resto do sistema */
   border-color: var(--color-accent);
   margin-left: auto;
   max-width: 85%;
@@ -391,7 +400,7 @@
 
 .historia__title {
   text-align: center;
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white */
   font-size: var(--text-h2);
   font-weight: 700;
 }
@@ -424,9 +433,9 @@
 
   background: linear-gradient(
     180deg,
-    rgba(14, 20, 29, 1) 0%,
-    rgba(9, 14, 22, 1) 100%
-  );
+    rgba(11, 42, 40, 1) 0%,
+    rgba(7, 29, 28, 1) 100%
+  ); /* AJUSTADO — tingido de petróleo em vez de azul-marinho neutro; esse painel continua escuro de propósito (é a moldura de uma foto/vídeo) */
 }
 
 .cta-final__image {
@@ -438,7 +447,7 @@
 }
 
 .cta-final__title {
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white; título fica fora do painel escuro, sobre o fundo claro da seção */
   font-size: var(--text-h2);
   font-weight: 700;
   line-height: 1.25;
@@ -457,7 +466,7 @@
 
 .footer {
   background-color: var(--color-bg);
-  color: var(--color-white);
+  color: var(--color-text); /* AJUSTADO — era --color-white; footer agora é claro, igual ao resto da página */
   padding-top: var(--space-xl);
   border-top: 1px solid var(--color-border);
 }
@@ -477,6 +486,10 @@
 }
 
 .footer__brand img { height: 40px; width: auto; object-fit: contain; }
+/* ⚠️ Se essa logo for a versão branca (mesma do navbar), ela vai sumir aqui,
+   porque o footer agora tem fundo claro. Você provavelmente precisa de uma
+   segunda versão da logo (colorida ou petróleo) pra usar no footer. Não
+   tenho como confirmar isso sem ver o arquivo de imagem. */
 
 .footer__tagline {
   color: var(--color-text-muted);
