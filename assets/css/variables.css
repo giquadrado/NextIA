@@ -1,40 +1,45 @@
 /* ─────────────────────────────────────────────
    variables.css – Design Tokens
-   Identidade visual: Algar + NextIA
+   Identidade visual: Algar + NextIA (tema claro)
 ───────────────────────────────────────────── */
 :root {
-  /* ── Paleta de cores – Algar ── */
-  /* Fundos */
-  --color-bg:             #0B2A28;   /* Petróleo institucional Algar */
-  --color-bg-alt:         #071D1C;   /* Petróleo ainda mais profundo */
+  /* ── Paleta de cores – Algar (tema claro) ── */
+
+  /* Fundos gerais das seções */
+  --color-bg:             #FFFFFF;   /* Fundo padrão das seções */
+  --color-bg-alt:         #F4F9F8;   /* Fundo alternado (zebra entre seções), leve tom petróleo */
+
+  /* Header / Nav — único trecho escuro, como na Algar */
+  --color-header-bg:      #0B2A28;   /* NOVO — petróleo institucional, só no topo */
+  --color-header-text:    #FFFFFF;   /* NOVO — texto do menu sobre o header escuro */
 
   /* Superfícies / Cards */
-  --color-card:           #0F3D3A;   /* Verde petróleo */
-  --color-card-alt:       #12504A;   /* Verde/azul para stats */
-  --color-card-iris:      #0F6B5C;   /* Verde Algar mais vivo */
+  --color-card:           #FFFFFF;   /* Card padrão, branco com sombra */
+  --color-card-alt:       #E6F5F3;   /* Card com leve tom turquesa, para stats/destaques */
+  --color-card-iris:      #D9F0EA;   /* Card com tom esverdeado mais forte, para blocos de agente */
 
   /* Bordas */
-  --color-border:         rgba(0, 169, 157, 0.22);
+  --color-border:         rgba(0, 169, 157, 0.25);
 
   /* ── Cores principais da marca ── */
-  --color-accent:         #00A99D;   /* Turquesa Algar */
-  --color-accent-dark:    #007A6E;   /* Verde escuro Algar */
-  --color-accent-soft:    rgba(0, 169, 157, 0.12);
+  --color-accent:         #00A99D;   /* Turquesa Algar — cor de ação (botões, links, ícones) */
+  --color-accent-dark:    #007A6E;   /* Verde escuro Algar — hover/estados */
+  --color-accent-soft:    rgba(0, 169, 157, 0.10);
 
   /* Estados / feedback */
-  --color-red:            #FA5975;
+  --color-red:            #E63950;
   --color-orange:         #FF9653;
-  --color-yellow:         #F5B400;   /* Amarelo do CTA "QUERO ESSA OFERTA" */
+  --color-yellow:         #F5B400;   /* Amarelo do CTA, como na Algar */
   --color-green:          #00A99D;
-  --color-gray-badge:     #2E4A50;
+  --color-gray-badge:     #E2E8E8;
 
   /* ── Neutros / texto ── */
   --color-white:          #FFFFFF;
-  /* Texto principal com leve tom quente da paleta */
-  --color-text-muted:     #AFD4D0;
-  --color-text-dim:       #7FA8A4;
-  /* Cor clara da identidade */
-  --color-light:          #FFEFE4;
+  --color-text:            #14232B;  /* NOVO — texto principal sobre fundo claro */
+  --color-text-inverse:    #FFFFFF;  /* NOVO — texto sobre fundo escuro (header, cards escuros pontuais) */
+  --color-text-muted:      #4A6367;
+  --color-text-dim:        #7A9296;
+  --color-light:           #FFEFE4;
 
   /* ── Tipografia ── */
   --font-condensed:       'Roboto Condensed', sans-serif;
@@ -69,9 +74,9 @@
 
   /* ── Sombras ── */
   --shadow-card:
-    0 4px 24px rgba(0, 0, 0, 0.25);
+    0 4px 20px rgba(11, 42, 40, 0.08);   /* mais suave, pensada pra fundo claro */
   --shadow-btn:
-    0 4px 20px rgba(0, 169, 157, 0.30);
+    0 4px 16px rgba(0, 169, 157, 0.35);
 
   /* ── Transições ── */
   --transition-fast:   150ms ease;
