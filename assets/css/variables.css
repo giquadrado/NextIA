@@ -25,6 +25,7 @@
   --color-accent:         #00A99D;   /* Turquesa Algar — cor de ação (botões, links, ícones) */
   --color-accent-dark:    #007A6E;   /* Verde escuro Algar — hover/estados */
   --color-accent-soft:    rgba(0, 169, 157, 0.10);
+   --color-text-inverse-muted: #AFD4D0;  /* NOVO — texto secundário sobre fundo escuro (hero, navbar mobile) */
 
   /* Estados / feedback */
   --color-red:            #E63950;
