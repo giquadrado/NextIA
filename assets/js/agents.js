@@ -1,125 +1,208 @@
+/**
+ * agents.js
+ * Vitrine de agentes:
+ *  - Troca o painel "Simulação de uso" ao selecionar um card
+ *  - Atalhos abaixo do hero selecionam o agente e rolam até a simulação
+ *  - CTAs de interesse avisam o formulário qual agente foi escolhido
+ *
+ * Os textos de conversa são ILUSTRATIVOS (o HTML exibe esse aviso no chat).
+ */
+
+'use strict';
+
+import { $, $$, prefersReducedMotion, scrollToElement, INTEREST_EVENT } from './utils.js';
+
 const agentsData = {
   nina: {
     article: 'a',
     name: 'Nina',
+    area: 'financeiro',
     tagline: 'Sua assistente financeira',
-    desc: 'Imagine um agente assim dentro da sua rotina financeira: integrado ao seu ERP e às suas planilhas, conciliando lançamentos, acompanhando o fluxo de caixa e alertando desvios antes que virem problema. É esse tipo de solução que construímos sob medida pra sua empresa.',
+    desc: 'Integrada ao seu ERP e às suas planilhas, ela concilia lançamentos, acompanha o fluxo de caixa e avisa sobre desvios antes que virem problema.',
     checklist: [
-      'Conciliação bancária automática',
-      'Previsão de fluxo de caixa em tempo real',
-      'Alertas de inadimplência e vencimentos'
+      'Conciliação bancária diária',
+      'Acompanhamento do fluxo de caixa',
+      'Alertas de vencimento e inadimplência',
     ],
-    ctaText: 'Criar meu agente financeiro',
-    avatar: '💰',
+    ctaText: 'Quero um agente financeiro',
     protocol: 'Protocolo #4432',
-    status: 'Processamento ativo...',
-    msg1: 'Olá, identifiquei 3 faturas vencendo nos próximos 2 dias com risco de atraso. Deseja que eu dispare a régua de cobrança?',
-    msg2: 'Sim, Nina. Priorize clientes com histórico de atraso.',
-    msg3: 'Entendido. 12 clientes selecionados. Iniciando régua de cobrança...'
+    status: 'Analisando contas a receber',
+    msg1: 'Identifiquei 3 faturas que vencem nos próximos 2 dias com histórico de atraso. Quer que eu envie o lembrete de cobrança?',
+    msg2: 'Sim, Nina. Comece pelos clientes com mais atrasos.',
+    msg3: 'Combinado. Enviando os lembretes e registrando cada envio.',
   },
   leo: {
     article: 'o',
     name: 'Léo',
-    tagline: 'Seu assistente de vendas',
-    desc: 'Imagine um agente assim cuidando da sua pré-venda: integrado ao seu CRM, qualificando leads, agendando reuniões e reengajando oportunidades que ficariam esquecidas no funil. Podemos construir esse agente pra sua operação de vendas.',
+    area: 'vendas',
+    tagline: 'Seu assistente de pré-venda',
+    desc: 'Integrado ao seu CRM, ele qualifica leads, agenda reuniões e retoma oportunidades que ficariam esquecidas no funil.',
     checklist: [
-      'Qualificação automática de leads (lead scoring)',
-      'Agendamento de reuniões via WhatsApp e e-mail',
-      'Reengajamento de oportunidades paradas no funil'
+      'Qualificação de leads com critérios do seu time',
+      'Agendamento de reuniões por WhatsApp e e-mail',
+      'Retomada de oportunidades paradas',
     ],
-    ctaText: 'Criar meu agente de vendas',
-    avatar: '📈',
+    ctaText: 'Quero um agente de vendas',
     protocol: 'Protocolo #7715',
-    status: 'Monitorando funil...',
-    msg1: 'Olá, encontrei 8 leads quentes sem contato há mais de 5 dias. Deseja que eu inicie o reengajamento?',
-    msg2: 'Sim, Léo. Priorize os leads de ticket alto.',
-    msg3: 'Entendido. 5 leads selecionados. Agendando follow-ups...'
+    status: 'Monitorando o funil',
+    msg1: 'Encontrei 8 leads qualificados sem contato há mais de 5 dias. Quer que eu retome a conversa com eles?',
+    msg2: 'Sim, Léo. Priorize os de maior potencial.',
+    msg3: 'Combinado. Enviando mensagens e oferecendo horários na agenda do time.',
   },
   sofia: {
     article: 'a',
     name: 'Sofia',
+    area: 'RH',
     tagline: 'Sua assistente de recrutamento',
-    desc: 'Imagine um agente assim agilizando o seu recrutamento: analisando currículos, agendando entrevistas e organizando o feedback do time em um só lugar. É esse tipo de agente que construímos sob medida pra sua área de RH.',
+    desc: 'Ela analisa currículos com os critérios da vaga, agenda entrevistas e organiza o feedback do time em um só lugar.',
     checklist: [
-      'Triagem de currículos por compatibilidade com a vaga',
-      'Agendamento automático de entrevistas',
-      'Organização de feedback dos entrevistadores'
+      'Triagem de currículos por critérios da vaga',
+      'Agendamento de entrevistas',
+      'Feedback dos entrevistadores organizado',
     ],
-    ctaText: 'Criar meu agente de RH',
-    avatar: '🧑‍💼',
+    ctaText: 'Quero um agente de RH',
     protocol: 'Protocolo #2290',
-    status: 'Triagem em andamento...',
-    msg1: 'Olá, analisei 64 currículos para a vaga de Analista de Dados. 9 têm alta compatibilidade.',
-    msg2: 'Ótimo, Sofia. Agende entrevistas com os 9 para essa semana.',
-    msg3: 'Entendido. Enviando convites de entrevista...'
+    status: 'Triagem em andamento',
+    msg1: 'Analisei os currículos da vaga de Analista de Dados. 9 atendem a todos os requisitos obrigatórios.',
+    msg2: 'Ótimo, Sofia. Proponha horários de entrevista para esta semana.',
+    msg3: 'Combinado. Enviando convites com os horários livres da gestora.',
   },
   maya: {
     article: 'a',
     name: 'Maya',
+    area: 'logística',
     tagline: 'Sua assistente de logística',
-    desc: 'Imagine um agente assim monitorando sua logística: rastreando pedidos, antecipando rupturas de estoque e sinalizando atrasos antes que cheguem ao seu cliente. Podemos construir esse agente pra sua operação.',
+    desc: 'Ela acompanha pedidos, sinaliza risco de ruptura de estoque e avisa sobre atrasos antes que cheguem ao seu cliente.',
     checklist: [
-      'Rastreamento de pedidos em tempo real',
-      'Previsão de ruptura de estoque',
-      'Alertas automáticos de atraso na entrega'
+      'Acompanhamento de pedidos',
+      'Alerta de risco de ruptura de estoque',
+      'Aviso antecipado de atrasos na entrega',
     ],
-    ctaText: 'Criar meu agente de logística',
-    avatar: '📦',
+    ctaText: 'Quero um agente de logística',
     protocol: 'Protocolo #5561',
-    status: 'Monitorando rotas...',
-    msg1: "Olá, identifiquei risco de ruptura no SKU 'Filtro X200' em 3 dias.",
-    msg2: 'Entendido, Maya. Acione o fornecedor backup.',
-    msg3: 'Entendido. Pedido de reposição emitido ao fornecedor B...'
-  }
+    status: 'Monitorando estoque',
+    msg1: 'O item Filtro X200 pode acabar em 3 dias no ritmo atual de saída. Quer que eu prepare um pedido de reposição?',
+    msg2: 'Sim, Maya. Mande para aprovação do comprador.',
+    msg3: 'Combinado. Pedido enviado para aprovação.',
+  },
 };
 
-function renderAgentDetail(agentId) {
+/* ── Elementos ───────────────────────────────────────────── */
+const cards     = $$('.agent-card');
+const shortcuts = $$('[data-agent-link]');
+const panel     = $('.agent-detail__panel');
+const chat      = $('.agent-detail__chat');
+const detailCta = $('#agent-detail-cta');
+const detailSection = $('#agent-detail-section');
+
+let currentAgent = 'nina';
+
+const setText = (id, value) => {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+};
+
+/* ── Renderização do painel ──────────────────────────────── */
+const renderAgentDetail = (agentId) => {
   const data = agentsData[agentId];
   if (!data) return;
 
-  document.getElementById('agent-detail-article').textContent = data.article;
-  document.getElementById('agent-detail-name').textContent = data.name;
-  document.getElementById('agent-detail-tagline').textContent = data.tagline;
-  document.getElementById('agent-detail-desc').textContent = data.desc;
-  document.getElementById('agent-detail-cta').textContent = data.ctaText;
-  document.getElementById('agent-detail-avatar').textContent = data.avatar;
-  document.getElementById('agent-detail-protocol').textContent = data.protocol;
-  document.getElementById('agent-detail-status').textContent = data.status;
-  document.getElementById('agent-detail-msg1').textContent = data.msg1;
-  document.getElementById('agent-detail-msg2').textContent = data.msg2;
-  document.getElementById('agent-detail-msg3').textContent = data.msg3;
+  setText('agent-detail-article', data.article);
+  setText('agent-detail-name', data.name);
+  setText('agent-detail-tagline', data.tagline);
+  setText('agent-detail-desc', data.desc);
+  setText('agent-detail-cta', data.ctaText);
+  setText('agent-detail-avatar', data.name.charAt(0)); // inicial no lugar de emoji
+  setText('agent-detail-protocol', data.protocol);
+  setText('agent-detail-status', data.status);
+  setText('agent-detail-msg1', data.msg1);
+  setText('agent-detail-msg2', data.msg2);
+  setText('agent-detail-msg3', data.msg3);
 
-  const checklistEl = document.getElementById('agent-detail-checklist');
-  checklistEl.innerHTML = data.checklist
-    .map(item => `<li>✅ ${item}</li>`)
-    .join('');
-}
+  // Checklist montada com textContent (sem innerHTML); o ícone vem do CSS
+  const checklist = document.getElementById('agent-detail-checklist');
+  if (checklist) {
+    checklist.replaceChildren(
+      ...data.checklist.map((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        return li;
+      })
+    );
+  }
+};
 
-function initAgentsShowcase() {
-  const cards = document.querySelectorAll('.agent-card');
-  const panel = document.querySelector('.agent-detail__panel');
-  const chat = document.querySelector('.agent-detail__chat');
+/* ── Seleção de agente ───────────────────────────────────── */
+const updateCardsState = (agentId) => {
+  cards.forEach((card) => {
+    const isActive = card.dataset.agent === agentId;
+    card.classList.toggle('is-active', isActive);
+    card.querySelector('.agent-card__select')?.setAttribute('aria-pressed', String(isActive));
+  });
+};
 
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      if (card.classList.contains('is-active')) return;
+const selectAgent = (agentId) => {
+  if (!agentsData[agentId] || agentId === currentAgent) return;
+  currentAgent = agentId;
+  updateCardsState(agentId);
 
-      cards.forEach(c => c.classList.remove('is-active'));
-      card.classList.add('is-active');
+  // Sem animação: troca direto
+  if (prefersReducedMotion() || !panel || !chat) {
+    renderAgentDetail(agentId);
+    return;
+  }
 
-      panel.classList.add('is-updating');
-      chat.classList.add('is-updating');
+  panel.classList.add('is-updating');
+  chat.classList.add('is-updating');
 
-      setTimeout(() => {
-        renderAgentDetail(card.dataset.agent);
-        panel.classList.remove('is-updating');
-        chat.classList.remove('is-updating');
-      }, 150); // combina com a transição de opacity no CSS
-    });
+  setTimeout(() => {
+    renderAgentDetail(agentId);
+    panel.classList.remove('is-updating');
+    chat.classList.remove('is-updating');
+  }, 150); // combina com a transição de opacity no CSS
+};
+
+/* ── Interesse → formulário ──────────────────────────────── */
+const announceInterest = (agentId) => {
+  const data = agentsData[agentId];
+  if (!data) return;
+  document.dispatchEvent(new CustomEvent(INTEREST_EVENT, {
+    detail: { agent: data.name, area: data.area, article: data.article },
+  }));
+};
+
+/* ── Eventos ─────────────────────────────────────────────── */
+cards.forEach((card) => {
+  const agentId = card.dataset.agent;
+
+  // Botão "Ver X em ação": seleciona e leva à simulação
+  card.querySelector('.agent-card__select')?.addEventListener('click', () => {
+    selectAgent(agentId);
+    scrollToElement(detailSection);
   });
 
-  // render inicial (Nina, já marcada como is-active no HTML)
-  renderAgentDetail('nina');
-}
+  // Link "Quero X": seleciona e avisa o formulário (a âncora #contato faz a rolagem)
+  card.querySelector('a[href="#contato"]')?.addEventListener('click', () => {
+    selectAgent(agentId);
+    announceInterest(agentId);
+  });
+});
 
-document.addEventListener('DOMContentLoaded', initAgentsShowcase);
+// Atalhos abaixo do hero
+shortcuts.forEach((shortcut) => {
+  shortcut.addEventListener('click', (e) => {
+    e.preventDefault();
+    selectAgent(shortcut.dataset.agentLink);
+    scrollToElement(detailSection);
+  });
+});
+
+// CTA do painel de simulação
+detailCta?.addEventListener('click', () => {
+  announceInterest(currentAgent);
+  scrollToElement('#contato');
+});
+
+/* ── Estado inicial ──────────────────────────────────────── */
+updateCardsState(currentAgent);
+renderAgentDetail(currentAgent);
