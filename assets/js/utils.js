@@ -1,6 +1,6 @@
 /**
  * utils.js
- * Funções utilitárias reutilizáveis em todo o projeto.
+ * Funções utilitárias compartilhadas pelos módulos da landing page.
  */
 
 'use strict';
@@ -11,8 +11,7 @@
  * @param {Element|Document} [scope=document]
  * @returns {Element|null}
  */
-export const $ = (selector, scope = document) =>
-  scope.querySelector(selector);
+export const $ = (selector, scope = document) => scope.querySelector(selector);
 
 /**
  * Seleciona múltiplos elementos no DOM.
@@ -20,21 +19,19 @@ export const $ = (selector, scope = document) =>
  * @param {Element|Document} [scope=document]
  * @returns {NodeList}
  */
-export const $$ = (selector, scope = document) =>
-  scope.querySelectorAll(selector);
+export const $$ = (selector, scope = document) => scope.querySelectorAll(selector);
 
 /**
- * Adiciona múltiplos event listeners de uma vez.
- * @param {Element} el
- * @param {string[]} events
- * @param {Function} handler
+ * Indica se o usuário pediu menos animação no sistema operacional.
+ * Usado para desligar transições e rolagens suaves.
+ * @returns {boolean}
  */
-export const onEvents = (el, events, handler) =>
-  events.forEach(evt => el.addEventListener(evt, handler));
+export const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * Cria um IntersectionObserver simples.
- * @param {Function} callback
+ * Cria um IntersectionObserver com valores padrão do projeto.
+ * @param {IntersectionObserverCallback} callback
  * @param {IntersectionObserverInit} [options]
  * @returns {IntersectionObserver}
  */
@@ -48,7 +45,7 @@ export const createObserver = (callback, options = {}) =>
 /**
  * Debounce: limita a frequência de chamadas a uma função.
  * @param {Function} fn
- * @param {number} delay - ms
+ * @param {number} [delay=200] - ms
  * @returns {Function}
  */
 export const debounce = (fn, delay = 200) => {
@@ -60,9 +57,27 @@ export const debounce = (fn, delay = 200) => {
 };
 
 /**
- * Formata número com separador de milhar pt-BR.
- * @param {number} n
- * @returns {string}
+ * Rola a página até um elemento, descontando a altura do header fixo.
+ * Respeita a preferência de movimento reduzido.
+ * @param {Element|string} target - elemento ou seletor
  */
-export const formatNumber = (n) =>
-  new Intl.NumberFormat('pt-BR').format(n);
+export const scrollToElement = (target) => {
+  const el = typeof target === 'string' ? $(target) : target;
+  if (!el) return;
+
+  const navbar = $('#navbar');
+  const offset = navbar ? navbar.offsetHeight + 16 : 0;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({
+    top,
+    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+  });
+};
+
+/**
+ * Nome do evento disparado quando o visitante demonstra interesse
+ * em um agente específico. O form.js escuta este evento para
+ * preencher o formulário de contato.
+ */
+export const INTEREST_EVENT = 'interagente:interesse';
