@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Interagente – Agentes de IA que automatizam, reduzem custos e escalam seu negócio." />
-<title>Interagente</title>
-<!-- Google Fonts -->
+<meta name="description" content="Interagente: agentes de IA sob medida para automatizar processos e apoiar decisões no seu negócio. Uma solução Algar." />
+<meta name="theme-color" content="#28BEA5" />
+<title>Interagente | Agentes de IA para o seu negócio</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" href="assets/images/favicon-interagente.png">
-<!-- Stylesheets -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" href="assets/images/favicon-interagente.png" />
+
 <link rel="stylesheet" href="assets/css/reset.css" />
 <link rel="stylesheet" href="assets/css/variables.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
@@ -21,365 +22,574 @@
 </head>
 <body>
 <a href="#main" class="skip-link">Pular para o conteúdo</a>
-<!-- ═══════════════════════════════════════ NAVBAR ═══════════════════════════════════════ -->
+
+<!-- ═════════════════════════════ FAIXA SUPERIOR (padrão Algar: abas de público) ═════════════════════════════ -->
+<!-- VALIDAR: confirmar com o time como a Interagente deve ser apresentada em relação ao Grupo Algar -->
+<div class="topbar">
+  <div class="topbar__inner container">
+    <p class="topbar__brand">Uma solução de IA do Grupo Algar</p>
+    <a href="chat.html" class="topbar__link">Converse agora com a Clara</a>
+  </div>
+</div>
+
+<!-- ═════════════════════════════ NAVBAR ═════════════════════════════ -->
 <header class="navbar" id="navbar">
-<div class="navbar__inner container">
-<a href="#" class="navbar__logo" aria-label="Interagente – Página inicial">
-<img src="assets/images/Interagente-logo.png" alt="Interagente Logo" width="147" height="53" />
-</a>
-<nav class="navbar__nav" aria-label="Menu principal">
-<ul class="navbar__links" role="list">
-<li><a href="#onde-atuamos" class="navbar__link">Onde atuamos</a></li>
-<li><a href="#resultados"   class="navbar__link">Resultados</a></li>
-<li><a href="#agentes"      class="navbar__link">Agentes</a></li>
-<li><a href="#metodologia"  class="navbar__link">Metodologia</a></li>
-</ul>
-</nav>
-<a href="#contato" class="btn btn--primary">Agendar conversa</a>
-<button class="navbar__hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
-<span></span><span></span><span></span>
-</button>
-</div>
-<!-- Mobile menu -->
-<nav class="navbar__mobile" id="mobile-menu" aria-hidden="true">
-<ul role="list">
-<li><a href="#onde-atuamos" class="navbar__link">Onde atuamos</a></li>
-<li><a href="#resultados"   class="navbar__link">Resultados</a></li>
-<li><a href="#agentes"      class="navbar__link">Agentes</a></li>
-<li><a href="#metodologia"  class="navbar__link">Metodologia</a></li>
-<li><a href="#contato" class="btn btn--primary btn--full">Agendar conversa</a></li>
-</ul>
-</nav>
+  <div class="navbar__inner container">
+    <a href="#" class="navbar__logo" aria-label="Interagente, página inicial">
+      <img src="assets/images/Interagente-logo.png" alt="Interagente" width="147" height="53" />
+    </a>
+
+    <nav class="navbar__nav" aria-label="Menu principal">
+      <ul class="navbar__links" role="list">
+        <li><a href="#solucoes"      class="navbar__link">Soluções</a></li>
+        <li><a href="#agentes"       class="navbar__link">Agentes</a></li>
+        <li><a href="#como-funciona" class="navbar__link">Como funciona</a></li>
+        <li><a href="#duvidas"       class="navbar__link">Dúvidas</a></li>
+      </ul>
+    </nav>
+
+    <a href="#contato" class="btn btn--primary navbar__cta">Agendar conversa</a>
+
+    <button class="navbar__hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="navbar__mobile" id="mobile-menu" aria-hidden="true" aria-label="Menu mobile">
+    <ul role="list">
+      <li><a href="#solucoes"      class="navbar__link">Soluções</a></li>
+      <li><a href="#agentes"       class="navbar__link">Agentes</a></li>
+      <li><a href="#como-funciona" class="navbar__link">Como funciona</a></li>
+      <li><a href="#duvidas"       class="navbar__link">Dúvidas</a></li>
+      <li><a href="#contato" class="btn btn--primary btn--full">Agendar conversa</a></li>
+    </ul>
+  </nav>
 </header>
+
 <main id="main">
-<!-- ═══════════════════════════════════════ HERO ══════════════════════════════════════════ -->
-<section class="hero" aria-label="Destaque principal">
-<div class="hero__bg" aria-hidden="true"></div>
-<div class="hero__content container">
-<h1 class="hero__title">
-         Um agente de IA <br />
-         feito <span class="text--accent">sob medida</span><br />
-         para o seu <br />
-         negócio.
-</h1>
-<p class="hero__subtitle">
-        Descubra como um agente de inteligência artificial pode assumir tarefas repetitivas, 
-monitorar sua operação em tempo real e liberar sua equipe para o que realmente importa — sem complicação técnica, sem reestruturar seu negócio do zero.
-</p>
-<a href="#onde-atuamos" class="btn btn--primary">
-         Quero um agente para o meu negócio 
-<span aria-hidden="true">→</span>
-</a>
-</div>
-</section>
-<!-- ════════════════════════════════════ ONDE ATUAMOS ══════════════════════════════════════ -->
-<section class="section diferencial" id="onde-atuamos" aria-labelledby="diferencial-title">
-<div class="container">
-<h2 class="section__title-main" id="diferencial-title">Onde Atuamos</h2>
-<p class="section__subtitle-main">
-         Soluções inteligentes desenhadas para cada gargalo do seu negócio.
-</p>
-<div class="cards-grid" role="list">
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span>
-<h3 class="card__title">Um agente que trabalha por você</h3>
-<p class="card__text">Tarefas repetitivas e processos manuais passam a rodar sozinhos, 24 horas por dia, aprendendo a cada execução.</p>
-</article>
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-<h3 class="card__title">Redução real de custos</h3>
-<p class="card__text">Menos retrabalho, menos erro humano, menos gasto operacional — automação de alta precisão que se paga rápido.</p>
-</article>
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
-<h3 class="card__title">Decisões com dados em tempo real</h3>
-<p class="card__text">Transforme informações espalhadas em dashboards claros, prontos pra decisão na hora certa.</p>
-</article>
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-<h3 class="card__title">Seu time de volta à estratégia</h3>
-<p class="card__text">Enquanto a IA cuida do operacional, sua equipe foca no que gera valor de verdade.</p>
-</article>
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
-<h3 class="card__title">Cresça no seu ritmo</h3>
-<p class="card__text">Aumente sua capacidade de atendimento e produção conforme o negócio pede, sem perder a leveza da operação.</p>
-</article>
-<article class="card" role="listitem">
-<span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-<h3 class="card__title">Respostas na velocidade do seu cliente</h3>
-<p class="card__text">Atendimento e processamento quase instantâneos, o dia inteiro, todos os dias.</p>
-</article>
-</div>
-</div>
-</section>
-<!-- ════════════════════════════════════ RESULTADOS ════════════════════════════════════════ -->
-<section class="section metricas" id="resultados" aria-labelledby="metricas-title">
-<div class="container">
-<h2 class="section__title-main" id="metricas-title">Resultados reais e comprovados</h2>
-<p class="section__subtitle-main">
-         Nossa IA não é apenas promessa. É eficiência tangível medida em indicadores cruciais para
-         o seu negócio.
-</p>
-<div class="stats-grid" role="list">
-<div class="stat" role="listitem">
-<p class="stat__number"><span data-target="32">0</span><span class="stat__symbol">%</span></p>
-<p class="stat__label-bold">Eficiência</p>
-<p class="stat__label">Aumento médio na produtividade global das equipes integradas.</p>
-</div>
-<div class="stat" role="listitem">
-<p class="stat__number">-<span data-target="48">0</span><span class="stat__symbol">%</span></p>
-<p class="stat__label-bold">Time reduction</p>
-<p class="stat__label">Redução no tempo de processamento de leads e solicitações.</p>
-</div>
-<div class="stat" role="listitem">
-<p class="stat__number">24/7</p>
-<p class="stat__label-bold">Disponibilidade</p>
-<p class="stat__label">Operação contínua sem interrupções ou queda de desempenho.</p>
-</div>
-<div class="stat" role="listitem">
-<p class="stat__number">10x</p>
-<p class="stat__label-bold">ROI</p>
-<p class="stat__label">Retorno médio sobre o investimento no primeiro ano.</p>
-</div>
-</div>
-</div>
-</section>
-<!-- ════════════════════════════════════ PARCEIROS ═════════════════════════════════════════ -->
-<section class="section parceiros" aria-labelledby="parceiros-title">
-<div class="container">
-<h2 class="section__title-main" id="parceiros-title">O que dizem nossos parceiros</h2>
-<div class="testimonials-grid" aria-label="Depoimentos de parceiros">
-<blockquote class="testimonial">
-<header class="testimonial__header">
-<span class="testimonial__avatar" aria-hidden="true"></span>
-<div>
-<strong>Ricardo Mello</strong>
-<span>CEO, LogiTech Solutions</span>
-</div>
-</header>
-<p>"A Clara transformou nossa logística em 3 meses. Reduzimos erros de expedição em 60% sem contratar uma única pessoa."</p>
-</blockquote>
-<blockquote class="testimonial">
-<header class="testimonial__header">
-<span class="testimonial__avatar" aria-hidden="true"></span>
-<div>
-<strong>Amanda Silva</strong>
-<span>Diretora de CS, FinGrow</span>
-</div>
-</header>
-<p>"A Íris atende 90% das demandas de primeiro nível. Nosso time agora foca apenas em consultoria estratégica de alto valor."</p>
-</blockquote>
-<blockquote class="testimonial">
-<header class="testimonial__header">
-<span class="testimonial__avatar" aria-hidden="true"></span>
-<div>
-<strong>Lucas Rocha</strong>
-<span>Founder, RetailBoost</span>
-</div>
-</header>
-<p>"A automação do Interagente nos permitiu dobrar o volume de vendas mantendo a mesma estrutura de custos operacionais."</p>
-</blockquote>
-</div>
-</div>
-</section>
-<!-- ════════════════════════════════════ EXEMPLOS DE AGENTES ═══════════════════════════════ -->
-<section class="section agents-showcase" id="agentes" aria-labelledby="agents-title">
-  <div class="container">
-    <h2 class="agents-showcase__title" id="agents-title">Exemplos de agentes em operação</h2>
-    <p class="agents-showcase__subtitle">
-      Agentes de IA aplicados para ganhar velocidade, reduzir tarefas manuais e melhorar decisões.
+
+<!-- ═════════════════════════════ HERO ═════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  <div class="hero__content container">
+    <h1 class="hero__title" id="hero-title">
+      Um agente de IA feito sob medida para o seu negócio.
+    </h1>
+
+    <p class="hero__subtitle">
+      Ele assume tarefas repetitivas, acompanha sua operação e libera sua equipe para o que
+      realmente importa, conectado aos sistemas que você já usa.
     </p>
- 
-    <div class="agents-showcase__grid" id="agents-grid">
-      <button class="agent-card is-active" type="button" data-agent="nina">
-        <h3 class="agent-card__name">Nina</h3>
-        <p class="agent-card__role">Agente Financeiro</p>
-        <p class="agent-card__desc">Concilia lançamentos, monitora fluxo de caixa e antecipa inadimplência.</p>
-      </button>
- 
-      <button class="agent-card" type="button" data-agent="leo">
-        <h3 class="agent-card__name">Léo</h3>
-        <p class="agent-card__role">Agente de Vendas (SDR)</p>
-        <p class="agent-card__desc">Qualifica leads, agenda reuniões e reengaja oportunidades no funil.</p>
-      </button>
- 
-      <button class="agent-card" type="button" data-agent="sofia">
-        <h3 class="agent-card__name">Sofia</h3>
-        <p class="agent-card__role">Agente de RH & Recrutamento</p>
-        <p class="agent-card__desc">Triagem de currículos, agendamento de entrevistas, feedback organizado.</p>
-      </button>
- 
-      <button class="agent-card" type="button" data-agent="maya">
-        <h3 class="agent-card__name">Maya</h3>
-        <p class="agent-card__role">Agente de Logística & Estoque</p>
-        <p class="agent-card__desc">Rastreia pedidos, prevê ruptura de estoque e antecipa atrasos.</p>
-      </button>
+
+    <!-- Fórmula no estilo dos banners Algar ("600 MEGA = 99,9") -->
+    <p class="hero__formula" aria-label="Um agente igual a operação funcionando 24 horas por dia">
+      <span class="hero__formula-term">1 agente</span>
+      <span class="hero__formula-sign" aria-hidden="true">=</span>
+      <span class="hero__formula-result">operação 24h por dia</span>
+    </p>
+
+    <div class="hero__actions">
+      <a href="#contato" class="btn btn--primary">Quero um agente</a>
+      <a href="#agentes" class="btn btn--ghost">Conhecer os agentes</a>
     </div>
   </div>
 </section>
- 
-<!-- ═══════════ DETALHE DO AGENTE (dinâmico) ═══════════ -->
-<section class="section agent-detail" id="agent-detail-section" aria-live="polite">
+
+<!-- ═════════════════════════════ ATALHOS (padrão Algar: 4 ícones abaixo do banner) ═════════════════════════════ -->
+<nav class="shortcuts" aria-label="Atalhos por área">
+  <ul class="shortcuts__list container" role="list">
+    <li>
+      <a href="#agentes" class="shortcut" data-agent-link="nina">
+        <span class="shortcut__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <span class="shortcut__label">Financeiro</span>
+      </a>
+    </li>
+    <li>
+      <a href="#agentes" class="shortcut" data-agent-link="leo">
+        <span class="shortcut__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+        <span class="shortcut__label">Vendas</span>
+      </a>
+    </li>
+    <li>
+      <a href="#agentes" class="shortcut" data-agent-link="sofia">
+        <span class="shortcut__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="shortcut__label">RH</span>
+      </a>
+    </li>
+    <li>
+      <a href="#agentes" class="shortcut" data-agent-link="maya">
+        <span class="shortcut__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+        <span class="shortcut__label">Logística</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- ═════════════════════════════ SOLUÇÕES ═════════════════════════════ -->
+<section class="section solucoes" id="solucoes" aria-labelledby="solucoes-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 class="section__title" id="solucoes-title">Onde um agente faz diferença</h2>
+      <p class="section__subtitle">Cada agente é desenhado a partir de um gargalo real da sua operação.</p>
+    </header>
+
+    <div class="cards-grid" role="list">
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span>
+        <h3 class="card__title">Tarefas repetitivas no automático</h3>
+        <p class="card__text">Processos manuais e previsíveis passam a ser executados pelo agente, a qualquer hora do dia.</p>
+      </article>
+
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></span>
+        <h3 class="card__title">Menos retrabalho</h3>
+        <p class="card__text">Regras claras e conferência automática reduzem erros de digitação, esquecimentos e etapas refeitas.</p>
+      </article>
+
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+        <h3 class="card__title">Informação organizada para decidir</h3>
+        <p class="card__text">Dados que hoje estão espalhados em planilhas e sistemas chegam reunidos e prontos para leitura.</p>
+      </article>
+
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <h3 class="card__title">Seu time no trabalho estratégico</h3>
+        <p class="card__text">Enquanto o agente cuida do operacional, as pessoas ficam com o que exige análise e relacionamento.</p>
+      </article>
+
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span>
+        <h3 class="card__title">Integrado ao que você já usa</h3>
+        <p class="card__text">O agente se conecta a ERP, CRM, planilhas, e-mail ou WhatsApp, sem exigir troca de sistema.</p>
+      </article>
+
+      <article class="card" role="listitem">
+        <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.5 9-4.5-1.5-7.5-4-7.5-9V6l7.5-3 7.5 3v7Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <h3 class="card__title">Você no controle</h3>
+        <p class="card__text">Decisões sensíveis passam por aprovação humana, e cada ação do agente fica registrada.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ AGENTES (padrão Algar: card de plano) ═════════════════════════════ -->
+<section class="section section--alt agentes" id="agentes" aria-labelledby="agentes-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 class="section__title" id="agentes-title">Exemplos de agentes</h2>
+      <p class="section__subtitle">Pontos de partida. Cada agente é ajustado às regras e aos sistemas da sua empresa.</p>
+    </header>
+
+    <div class="agents-grid" id="agents-grid">
+
+      <article class="agent-card is-active" data-agent="nina">
+        <p class="agent-card__tag">Mais procurado</p>
+        <p class="agent-card__role">Agente Financeiro</p>
+        <h3 class="agent-card__name">Nina</h3>
+        <p class="agent-card__plus">+ integra com ERP e planilhas</p>
+        <p class="agent-card__desc">Concilia lançamentos, acompanha o fluxo de caixa e avisa sobre vencimentos.</p>
+        <ul class="agent-card__skills" role="list" aria-label="Habilidades da Nina">
+          <li>Conciliação</li><li>Fluxo de caixa</li><li>Cobrança</li>
+        </ul>
+        <div class="agent-card__actions">
+          <button type="button" class="btn btn--outline agent-card__select">Ver a Nina em ação</button>
+          <a href="#contato" class="btn btn--primary">Quero a Nina</a>
+        </div>
+      </article>
+
+      <article class="agent-card" data-agent="leo">
+        <p class="agent-card__tag">Pré-venda</p>
+        <p class="agent-card__role">Agente de Vendas (SDR)</p>
+        <h3 class="agent-card__name">Léo</h3>
+        <p class="agent-card__plus">+ integra com CRM e WhatsApp</p>
+        <p class="agent-card__desc">Qualifica leads, agenda reuniões e retoma oportunidades paradas no funil.</p>
+        <ul class="agent-card__skills" role="list" aria-label="Habilidades do Léo">
+          <li>Qualificação</li><li>Agendamento</li><li>Follow-up</li>
+        </ul>
+        <div class="agent-card__actions">
+          <button type="button" class="btn btn--outline agent-card__select">Ver o Léo em ação</button>
+          <a href="#contato" class="btn btn--primary">Quero o Léo</a>
+        </div>
+      </article>
+
+      <article class="agent-card" data-agent="sofia">
+        <p class="agent-card__tag">Recrutamento</p>
+        <p class="agent-card__role">Agente de RH</p>
+        <h3 class="agent-card__name">Sofia</h3>
+        <p class="agent-card__plus">+ integra com e-mail e agenda</p>
+        <p class="agent-card__desc">Faz a triagem de currículos, agenda entrevistas e organiza o feedback do time.</p>
+        <ul class="agent-card__skills" role="list" aria-label="Habilidades da Sofia">
+          <li>Triagem</li><li>Entrevistas</li><li>Feedback</li>
+        </ul>
+        <div class="agent-card__actions">
+          <button type="button" class="btn btn--outline agent-card__select">Ver a Sofia em ação</button>
+          <a href="#contato" class="btn btn--primary">Quero a Sofia</a>
+        </div>
+      </article>
+
+      <article class="agent-card" data-agent="maya">
+        <p class="agent-card__tag">Operações</p>
+        <p class="agent-card__role">Agente de Logística</p>
+        <h3 class="agent-card__name">Maya</h3>
+        <p class="agent-card__plus">+ integra com ERP e transportadoras</p>
+        <p class="agent-card__desc">Acompanha pedidos, sinaliza risco de ruptura de estoque e avisa sobre atrasos.</p>
+        <ul class="agent-card__skills" role="list" aria-label="Habilidades da Maya">
+          <li>Rastreio</li><li>Estoque</li><li>Alertas</li>
+        </ul>
+        <div class="agent-card__actions">
+          <button type="button" class="btn btn--outline agent-card__select">Ver a Maya em ação</button>
+          <a href="#contato" class="btn btn--primary">Quero a Maya</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ DETALHE DO AGENTE (dinâmico, agents.js) ═════════════════════════════ -->
+<section class="section agent-detail" id="agent-detail-section" aria-live="polite" aria-labelledby="agent-detail-heading">
   <div class="container agent-detail__grid">
- 
+
     <div class="agent-detail__panel">
-      <span class="agent-detail__tag">NA PRÁTICA</span>
-      <h2 class="agent-detail__title">
+      <p class="agent-detail__tag">Simulação de uso</p>
+      <h2 class="agent-detail__title" id="agent-detail-heading">
         Conheça <span id="agent-detail-article">a</span>
-        <span class="text--accent" id="agent-detail-name">Nina</span>:
+        <span id="agent-detail-name">Nina</span>:
         <span id="agent-detail-tagline">Sua assistente financeira</span>
       </h2>
       <p class="agent-detail__desc" id="agent-detail-desc"></p>
       <ul class="agent-detail__checklist" id="agent-detail-checklist"></ul>
-      <button class="btn btn--outline" id="agent-detail-cta">Criar meu agente financeiro</button>
+      <button class="btn btn--primary" id="agent-detail-cta">Criar meu agente financeiro</button>
     </div>
- 
-    <div class="agent-detail__chat">
+
+    <div class="agent-detail__chat" role="img" aria-label="Exemplo ilustrativo de conversa com o agente">
       <div class="chat-mock__header">
-        <div class="chat-mock__avatar" id="agent-detail-avatar" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
+        <div class="chat-mock__avatar" id="agent-detail-avatar" aria-hidden="true"></div>
         <div>
           <p class="chat-mock__protocol" id="agent-detail-protocol">Protocolo #4432</p>
           <p class="chat-mock__status" id="agent-detail-status">Processamento ativo...</p>
         </div>
-        <span class="chat-mock__menu" aria-hidden="true">•••</span>
       </div>
- 
+
       <div class="chat-mock__bubble chat-mock__bubble--agent" id="agent-detail-msg1"></div>
-      <div class="chat-mock__bubble chat-mock__bubble--user" id="agent-detail-msg2"></div>
+      <div class="chat-mock__bubble chat-mock__bubble--user"  id="agent-detail-msg2"></div>
       <div class="chat-mock__bubble chat-mock__bubble--agent">
         <p id="agent-detail-msg3"></p>
         <div class="chat-mock__progress"><span></span></div>
       </div>
- 
-      <div class="chat-mock__input">
-        <span>Digite um comando...</span>
-        <button aria-label="Enviar">▶</button>
-      </div>
+
+      <p class="chat-mock__note">Conversa ilustrativa</p>
     </div>
- 
+
   </div>
 </section>
-<!-- ══════════════════════════════════════ NOSSA HISTÓRIA ═════════════════════════════════ -->
-<section class="section historia" id="metodologia" aria-labelledby="historia-title">
-<div class="container">
-<h2 class="historia__title" id="historia-title">
-         Nossa História: O Caminho para a Eficiência
-</h2>
-<div class="history-grid" role="list">
-<article class="history-card" role="listitem">
-<span class="history-card__badge history-card__badge--red">1</span>
-<h3 class="history-card__title">Gargalos</h3>
-<p class="history-card__desc">
-             Processos manuais travando o crescimento, erros humanos frequentes e
-             custos operacionais insustentáveis.
-</p>
-</article>
-<article class="history-card history-card--active" role="listitem">
-<span class="history-card__badge history-card__badge--green">2</span>
-<h3 class="history-card__title">Transição</h3>
-<p class="history-card__desc">
-             Implementação de agentes cognitivos que integram o conhecimento do
-             negócio com o poder da computação neural.
-</p>
-</article>
-<article class="history-card" role="listitem">
-<span class="history-card__badge history-card__badge--gray">3</span>
-<h3 class="history-card__title">Escala Inteligente</h3>
-<p class="history-card__desc">
-             Negócio rodando em alta performance com autonomia total de fluxos
-             operacionais e insights estratégicos.
-</p>
-</article>
-</div>
-</div>
+
+<!-- ═════════════════════════════ COMO MEDIMOS (substitui os números sem fonte) ═════════════════════════════ -->
+<section class="section section--alt medicao" id="resultados" aria-labelledby="medicao-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 class="section__title" id="medicao-title">Resultado que dá para medir</h2>
+      <p class="section__subtitle">
+        Antes de começar, definimos com você os indicadores de sucesso e medimos o ponto de partida.
+        Assim, o ganho é comparado com a sua própria operação.
+      </p>
+    </header>
+
+    <div class="metrics-grid" role="list">
+      <div class="metric" role="listitem">
+        <h3 class="metric__title">Tempo de resposta</h3>
+        <p class="metric__text">Quanto tempo uma solicitação leva do recebimento até a primeira ação.</p>
+      </div>
+      <div class="metric" role="listitem">
+        <h3 class="metric__title">Volume automatizado</h3>
+        <p class="metric__text">Quantas tarefas o agente resolve sem precisar de intervenção humana.</p>
+      </div>
+      <div class="metric" role="listitem">
+        <h3 class="metric__title">Taxa de retrabalho</h3>
+        <p class="metric__text">Quantas vezes um processo precisa ser corrigido ou refeito.</p>
+      </div>
+      <div class="metric" role="listitem">
+        <h3 class="metric__title">Custo por processo</h3>
+        <p class="metric__text">Quanto custa, em horas e recursos, cada execução do processo.</p>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- ══════════════════════════════════════ CONTATO (CLARA) ════════════════════════════════ -->
+
+<!-- ═════════════════════════════ CENÁRIOS (substitui os depoimentos fictícios) ═════════════════════════════ -->
+<section class="section cenarios" aria-labelledby="cenarios-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 class="section__title" id="cenarios-title">Como isso aparece no dia a dia</h2>
+      <p class="section__subtitle">Cenários ilustrativos de onde um agente costuma entrar na rotina.</p>
+    </header>
+
+    <div class="cenarios-grid" role="list">
+      <article class="cenario" role="listitem">
+        <p class="cenario__area">Atendimento</p>
+        <dl class="cenario__compare">
+          <div class="cenario__row cenario__row--antes">
+            <dt>Antes</dt>
+            <dd>Dúvidas repetidas ocupam o time o dia inteiro e as respostas fora do horário ficam para o dia seguinte.</dd>
+          </div>
+          <div class="cenario__row cenario__row--depois">
+            <dt>Com o agente</dt>
+            <dd>As dúvidas frequentes são respondidas na hora, e os casos complexos chegam ao time já com o contexto registrado.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="cenario" role="listitem">
+        <p class="cenario__area">Financeiro</p>
+        <dl class="cenario__compare">
+          <div class="cenario__row cenario__row--antes">
+            <dt>Antes</dt>
+            <dd>A conciliação é feita à mão, cruzando extrato e planilha no fim do mês.</dd>
+          </div>
+          <div class="cenario__row cenario__row--depois">
+            <dt>Com o agente</dt>
+            <dd>Os lançamentos são conciliados diariamente e só as divergências vão para revisão humana.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="cenario" role="listitem">
+        <p class="cenario__area">Vendas</p>
+        <dl class="cenario__compare">
+          <div class="cenario__row cenario__row--antes">
+            <dt>Antes</dt>
+            <dd>Leads esfriam porque ninguém consegue responder todos a tempo.</dd>
+          </div>
+          <div class="cenario__row cenario__row--depois">
+            <dt>Com o agente</dt>
+            <dd>Todo lead recebe um primeiro contato rápido, e o vendedor recebe só os qualificados, com a reunião agendada.</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ COMO FUNCIONA (sequência real: numeração faz sentido) ═════════════════════════════ -->
+<!-- VALIDAR: confirmar com o time se estas são as etapas reais do processo -->
+<section class="section section--alt como-funciona" id="como-funciona" aria-labelledby="como-funciona-title">
+  <div class="container">
+    <header class="section__head">
+      <h2 class="section__title" id="como-funciona-title">Como funciona</h2>
+      <p class="section__subtitle">Do primeiro contato ao agente rodando, em etapas claras.</p>
+    </header>
+
+    <ol class="steps" role="list">
+      <li class="step">
+        <span class="step__number" aria-hidden="true">1</span>
+        <h3 class="step__title">Diagnóstico</h3>
+        <p class="step__text">Entendemos o processo, os sistemas envolvidos e onde está o gargalo.</p>
+      </li>
+      <li class="step">
+        <span class="step__number" aria-hidden="true">2</span>
+        <h3 class="step__title">Desenho do agente</h3>
+        <p class="step__text">Definimos o que o agente faz, o que precisa de aprovação humana e como medir o resultado.</p>
+      </li>
+      <li class="step">
+        <span class="step__number" aria-hidden="true">3</span>
+        <h3 class="step__title">Piloto</h3>
+        <p class="step__text">O agente começa em um escopo controlado, com acompanhamento próximo e ajustes.</p>
+      </li>
+      <li class="step">
+        <span class="step__number" aria-hidden="true">4</span>
+        <h3 class="step__title">Expansão</h3>
+        <p class="step__text">Com o piloto validado, o agente assume mais volume ou novos processos.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ DÚVIDAS (padrão Algar: "Possui alguma dúvida?") ═════════════════════════════ -->
+<!-- VALIDAR: revisar as respostas com o time antes de publicar -->
+<section class="section faq" id="duvidas" aria-labelledby="faq-title">
+  <div class="container container--narrow">
+    <header class="section__head">
+      <h2 class="section__title" id="faq-title">Possui alguma dúvida?</h2>
+    </header>
+
+    <div class="faq__list">
+      <details class="faq__item">
+        <summary>Preciso trocar meus sistemas para usar um agente?</summary>
+        <p>Não. O agente é desenhado para trabalhar com as ferramentas que sua empresa já usa. No diagnóstico, avaliamos quais integrações são possíveis.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Quanto tempo leva para o agente começar a funcionar?</summary>
+        <p>Depende do processo e das integrações envolvidas. O prazo é definido no diagnóstico, e começamos sempre por um piloto de escopo menor.</p>
+      </details>
+      <details class="faq__item">
+        <summary>O agente toma decisões sozinho?</summary>
+        <p>Só dentro das regras combinadas com você. Ações sensíveis, como pagamentos ou respostas fora do padrão, podem exigir aprovação de uma pessoa do seu time.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Como ficam os dados da minha empresa?</summary>
+        <p>O agente acessa apenas os sistemas e dados autorizados no projeto. As regras de acesso e de tratamento de dados são definidas junto com o seu time.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Como faço para começar?</summary>
+        <p>Converse com a Clara ou preencha o formulário abaixo. Nosso time entra em contato para agendar o diagnóstico.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ DIFERENCIAIS (padrão Algar: faixa de 4 itens) ═════════════════════════════ -->
+<section class="perks" aria-label="Diferenciais">
+  <ul class="perks__list container" role="list">
+    <li class="perk">
+      <strong class="perk__title">Sem trocar de sistema</strong>
+      <span class="perk__text">Integração com as ferramentas atuais</span>
+    </li>
+    <li class="perk">
+      <strong class="perk__title">Começa pequeno</strong>
+      <span class="perk__text">Piloto antes de escalar</span>
+    </li>
+    <li class="perk">
+      <strong class="perk__title">Resultado medido</strong>
+      <span class="perk__text">Indicadores definidos com você</span>
+    </li>
+    <li class="perk">
+      <strong class="perk__title">Pessoas no controle</strong>
+      <span class="perk__text">Aprovação humana quando necessário</span>
+    </li>
+  </ul>
+</section>
+
+<!-- ═════════════════════════════ CONTATO (CLARA) ═════════════════════════════ -->
 <section class="section cta-final" id="contato" aria-labelledby="cta-title">
-<div class="container cta-final__grid">
-<div class="cta-final__visual" aria-hidden="true">
-          <img
-        src="/assets/images/agente.png"
-        alt="Clara, Gerente de Operações da Interagente"
-        class="cta-final__image"
-          >
-</div>
-<div class="cta-final__panel">
-<h2 class="cta-final__title" id="cta-title">
-           Pronto para o <span class="text--accent">próximo nível?</span>
-</h2>
-<p class="cta-final__desc">
-           Conte pra Clara um pouco sobre o seu negócio. Ela reúne as informações e conecta você ao nosso time, 
-         que vai entender de perto o seu momento e mostrar como um agente de IA pode ser construído pra sua operação.
-</p>
-<div class="form-card">
-<p class="form-card__label">
-<span class="form-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.5 9-4.5-1.5-7.5-4-7.5-9V6l7.5-3 7.5 3v7Z"/><path d="m9 12 2 2 4-4"/></svg></span> Falar com a Clara
-</p>
-<form id="contact-form" novalidate>
-<div class="form-group">
-<label for="nome" class="visually-hidden">Seu nome</label>
-<input type="text" id="nome" name="nome" placeholder="Seu nome" />
-<span class="form-error" role="alert"></span>
-</div>
-<div class="form-group">
-<label for="email" class="visually-hidden">Email corporativo</label>
-<input type="email" id="email" name="email" placeholder="Email corporativo" />
-<span class="form-error" role="alert"></span>
-</div>
-<div class="form-group">
-<label for="desafio" class="visually-hidden">Como podemos acelerar seu negócio?</label>
-<textarea id="desafio" name="desafio" rows="3" placeholder="Como podemos acelerar seu negócio?"></textarea>
-<span class="form-error" role="alert"></span>
-</div>
-<button type="submit" class="btn btn--primary btn--full">Falar com a Clara</button>
-</form>
-</div>
-</div>
-</div>
+  <div class="container cta-final__grid">
+
+    <div class="cta-final__visual">
+      <img src="assets/images/agente.png" alt="Ilustração da Clara, agente de atendimento da Interagente" class="cta-final__image" loading="lazy" />
+    </div>
+
+    <div class="cta-final__panel">
+      <h2 class="cta-final__title" id="cta-title">Vamos conversar sobre a sua operação?</h2>
+      <p class="cta-final__desc">
+        A Clara é o nosso próprio agente de atendimento. Conte a ela um pouco sobre o seu negócio,
+        ou deixe seus dados abaixo, e o nosso time entra em contato.
+      </p>
+
+      <a href="chat.html" class="btn btn--primary btn--full cta-final__chat">Conversar com a Clara agora</a>
+
+      <div class="form-card">
+        <p class="form-card__label">Prefere que a gente entre em contato?</p>
+
+        <form id="contact-form" novalidate>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" autocomplete="name" />
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">E-mail corporativo</label>
+              <input type="email" id="email" name="email" autocomplete="email" />
+              <span class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone <span class="form-optional">(opcional)</span></label>
+              <input type="tel" id="telefone" name="telefone" autocomplete="tel" />
+              <span class="form-error" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="empresa">Empresa <span class="form-optional">(opcional)</span></label>
+            <input type="text" id="empresa" name="empresa" autocomplete="organization" />
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="desafio">Qual processo você gostaria de automatizar?</label>
+            <textarea id="desafio" name="desafio" rows="3"></textarea>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <button type="submit" class="btn btn--outline btn--full">Quero ser contatado</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
 </section>
+
 </main>
-<!-- ══════════════════════════════════════ FOOTER ════════════════════════════════════════════ -->
-<footer class="footer" role="contentinfo">
-<div class="footer__inner container">
-<div class="footer__brand">
-<a href="#" aria-label="Interagente – topo da página">
-<img src="assets/images/Interagente-logo.png" alt="Interagente Logo" width="120" height="44" loading="lazy" />
+
+<!-- Botão flutuante (padrão Algar: "Não achou algo?") -->
+<a href="chat.html" class="float-chat" aria-label="Conversar com a Clara">
+  <span class="float-chat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
+  <span class="float-chat__label">Fale com a Clara</span>
 </a>
-<p class="footer__tagline">
-         Acelerando o futuro dos negócios através de agentes de inteligência
-         artificial autônomos e integrados.
-</p>
-</div>
-<nav class="footer__nav" aria-label="Navegação do rodapé">
-<p class="footer__nav-title">Navegação</p>
-<ul role="list">
-<li><a href="#onde-atuamos">Benefícios</a></li>
-<li><a href="#agentes">Soluções</a></li>
-<li><a href="#resultados">Resultados</a></li>
-<li><a href="#metodologia">Metodologia</a></li>
-</ul>
-</nav>
-<nav class="footer__nav" aria-label="Informações legais">
-<p class="footer__nav-title">Legal</p>
-<ul role="list">
-<li><a href="#">Privacy Policy</a></li>
-<li><a href="#">Terms of Service</a></li>
-<li><a href="#">Cookie Policy</a></li>
-</ul>
-</nav>
-</div>
-<p class="footer__copyright">© 2026 Interagente ALGAR. All rights reserved.</p>
+
+<!-- ═════════════════════════════ FOOTER (padrão Algar: mapa do site em colunas) ═════════════════════════════ -->
+<footer class="footer">
+  <div class="footer__inner container">
+
+    <div class="footer__brand">
+      <a href="#" aria-label="Interagente, voltar ao topo">
+        <img src="assets/images/Interagente-logo.png" alt="Interagente" width="120" height="44" loading="lazy" />
+      </a>
+      <p class="footer__tagline">Agentes de IA sob medida para automatizar processos e apoiar decisões.</p>
+    </div>
+
+    <nav class="footer__col" aria-label="Navegação do rodapé">
+      <p class="footer__title">Navegação</p>
+      <ul role="list">
+        <li><a href="#solucoes">Soluções</a></li>
+        <li><a href="#agentes">Agentes</a></li>
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#duvidas">Dúvidas</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__col" aria-label="Agentes">
+      <p class="footer__title">Agentes</p>
+      <ul role="list">
+        <li><a href="#agentes">Nina, financeiro</a></li>
+        <li><a href="#agentes">Léo, vendas</a></li>
+        <li><a href="#agentes">Sofia, RH</a></li>
+        <li><a href="#agentes">Maya, logística</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <p class="footer__title">Atendimento</p>
+      <ul role="list">
+        <li><a href="chat.html">Conversar com a Clara</a></li>
+        <li><a href="#contato">Formulário de contato</a></li>
+      </ul>
+    </div>
+
+    <nav class="footer__col" aria-label="Informações legais">
+      <p class="footer__title">Legal</p>
+      <ul role="list">
+        <!-- VALIDAR: substituir "#" pelos links reais das políticas -->
+        <li><a href="#">Política de privacidade</a></li>
+        <li><a href="#">Termos de uso</a></li>
+        <li><a href="#">Política de cookies</a></li>
+      </ul>
+    </nav>
+
+  </div>
+
+  <div class="footer__bottom container">
+    <p class="footer__copyright">© 2026 Interagente, Grupo Algar. Todos os direitos reservados.</p>
+  </div>
 </footer>
+
 <!-- Scripts -->
-<script type="module" src="assets/js/agents.js"      defer></script>         
-<script type="module" src="assets/js/utils.js"       defer></script>
-<script type="module" src="assets/js/navbar.js"      defer></script>
-<script type="module" src="assets/js/animations.js"  defer></script>
-<script type="module" src="assets/js/counter.js"     defer></script>
-<script type="module" src="assets/js/form.js"        defer></script>
+<script type="module" src="assets/js/agents.js"     defer></script>
+<script type="module" src="assets/js/utils.js"      defer></script>
+<script type="module" src="assets/js/navbar.js"     defer></script>
+<script type="module" src="assets/js/animations.js" defer></script>
+<script type="module" src="assets/js/form.js"       defer></script>
 </body>
 </html>
- 
