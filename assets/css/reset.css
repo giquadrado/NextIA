@@ -1,6 +1,6 @@
 /* ─────────────────────────────────────────────
-   reset.css  –  Normalização cross-browser
-   Baseado em: Modern CSS Reset (Andy Bell, 2023)
+   reset.css – Normalização entre navegadores
+   Baseado no Modern CSS Reset (Andy Bell)
 ───────────────────────────────────────────── */
 
 *,
@@ -12,7 +12,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -25,8 +24,6 @@ body {
 
 img,
 picture,
-video,
-canvas,
 svg {
   display: block;
   max-width: 100%;
@@ -37,15 +34,14 @@ button,
 textarea,
 select {
   font: inherit;
+  color: inherit;
 }
 
 p,
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
+h4 {
   overflow-wrap: break-word;
 }
 
@@ -55,8 +51,8 @@ ol[role="list"] {
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
 button {
@@ -65,11 +61,15 @@ button {
   background: none;
 }
 
-fieldset {
-  border: none;
+textarea {
+  resize: vertical;
 }
 
-/* Remove animações para quem prefere */
+[hidden] {
+  display: none !important;
+}
+
+/* Movimento reduzido: desliga animações e transições */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
