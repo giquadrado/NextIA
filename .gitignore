@@ -1,11 +1,17 @@
 # Ambiente virtual e cache do Python
+.venv/
+venv/
 __pycache__/
 *.pyc
 
-# Arquivos de configuração/Variáveis de ambiente
+# Variáveis de ambiente (senhas e chaves)
 .env
 
-# Banco de dados local (e arquivos temporários do SQLite)
+# Banco SQLite antigo e arquivos temporários
 *.db
 *.db-shm
 *.db-wal
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
