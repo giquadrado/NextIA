@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0F3D37" />
+<title>Clara | Interagente</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" href="assets/images/favicon-interagente.png" />
+
+<link rel="stylesheet" href="assets/css/reset.css" />
+<link rel="stylesheet" href="assets/css/variables.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/chat.css" />
+</head>
+<body>
+
+<main class="chat-page">
+  <section class="chat-container" aria-labelledby="chat-title">
+
+    <header class="chat-header">
+      <img src="assets/images/agente.png" alt="" class="chat-avatar" width="48" height="48" />
+      <div class="chat-header__info">
+        <h1 id="chat-title">Clara</h1>
+        <p>Agente de atendimento da Interagente</p>
+      </div>
+      <a href="index.html" class="chat-back">Voltar ao site</a>
+    </header>
+
+    <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-label="Mensagens da conversa"></div>
+
+    <div id="typingIndicator" class="typing-indicator hidden" aria-hidden="true">
+      Clara está digitando...
+    </div>
+
+    <form id="chatForm" class="chat-input-area">
+      <label for="messageInput" class="visually-hidden">Sua mensagem</label>
+      <input type="text" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off" maxlength="2000" />
+      <button type="submit" id="sendButton">Enviar</button>
+    </form>
+
+  </section>
+</main>
+
+<script src="assets/js/chat.js"></script>
+</body>
+</html>
