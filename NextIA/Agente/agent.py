@@ -1,404 +1,494 @@
 """
-Agente de Conversação para Landing Page
-Powered by LangGraph + Groq + Tavily
+agent.py — Clara, agente de atendimento da Interagente
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Fluxo:
-  1. Saudação → pergunta se prefere FORMULÁRIO ou CONVERSA
-  2a. FORMULÁRIO → coleta os campos um a um, direto ao ponto
-  2b. CONVERSA  → bate-papo natural, extrai dados organicamente
-  3. Quando todos os dados forem coletados → confirma → salva lead
+Grafo LangGraph executado a cada mensagem do visitante:
+
+    START → extrair → atualizar_fase → responder → END
+
+  • extrair         lê a última resposta do visitante e devolve, em JSON, os dados
+                    que ele informou (nome, cargo, área...). Grava no PostgreSQL.
+  • atualizar_fase  decide a etapa da conversa (escolha → coleta → concluido)
+                    com regras em Python, sem depender do LLM.
+  • responder       gera a resposta da Clara com o prompt da fase atual.
+
+O estado completo vem do banco a cada mensagem (API stateless), então a Clara
+"lembra" da conversa mesmo após reinícios do servidor.
 """
 
-import os
-import ast
-import re
-import json
-import logging
-from typing import Annotated, TypedDict
-from dotenv import load_dotenv
+from __future__ import annotations
 
-from langgraph.graph import StateGraph, START, END
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import create_react_agent
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
+import logging
+import os
+import re
+from typing import Annotated, Literal, Optional, TypedDict
+
+from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langchain_groq import ChatGroq
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import add_messages
+from pydantic import BaseModel, Field
 
-# ──────────────────────────────────────────────────────────────
-# Config
-# ──────────────────────────────────────────────────────────────
+import faq
+from db import repositorio as repo
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("clara.agent")
 
-GROQ_API_KEY   = os.getenv("GROQ_API_KEY")
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+CONSENTIMENTO_VERSAO = os.getenv("CONSENTIMENTO_VERSAO", "v1-2026-10")
 
 if not GROQ_API_KEY:
-    raise EnvironmentError("GROQ_API_KEY não encontrada no .env")
-if not TAVILY_API_KEY:
-    raise EnvironmentError("TAVILY_API_KEY não encontrada no .env")
+    raise EnvironmentError("GROQ_API_KEY não encontrada. Configure no .env ou no Railway.")
 
-# ──────────────────────────────────────────────────────────────
-# Tipos / Estado da Sessão
-# ──────────────────────────────────────────────────────────────
-
-class LeadData(TypedDict, total=False):
-    nome:             str
-    email:            str
-    empresa:          str
-    num_funcionarios: str
-    objetivo:         str
-    dor_atual:        str
-    modo:             str   # "formulario" | "conversa"
-
-class SessionState(TypedDict):
-    messages: Annotated[list[BaseMessage], add_messages]
-    lead:     LeadData
-    fase:     str           # "escolha" | "coleta" | "concluido"
-
-# ──────────────────────────────────────────────────────────────
-# LLM
-# ──────────────────────────────────────────────────────────────
-
-llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
-    temperature=0.4,
-    api_key=GROQ_API_KEY,
-)
-
-# ──────────────────────────────────────────────────────────────
-# Ferramentas
-# ──────────────────────────────────────────────────────────────
-
-tavily = TavilySearchResults(max_results=3, api_key=TAVILY_API_KEY)
-
-@tool
-def search_web(query: str) -> str:
-    """Busca informações atualizadas na web sobre produtos, mercado ou qualquer
-    dúvida externa que o usuário trouxer durante a conversa."""
-    logger.info(f"[search_web] query='{query}'")
-    try:
-        results = tavily.invoke(query)
-        return str(results) if results else "Nenhum resultado encontrado."
-    except Exception as e:
-        logger.error(f"[search_web] Erro: {e}")
-        return f"Erro na busca: {e}"
-
-@tool
-def get_faq(topic: str) -> str:
-    """Responde perguntas frequentes sobre preço, prazo, suporte, garantia e integrações.
-    Use ANTES de buscar na web para tópicos comuns."""
-    faqs = {
-        "preço":        "Nossos planos começam em R$ 97/mês — Starter, Pro e Enterprise.",
-        "prazo":        "Implementação em média 7 dias úteis após a contratação.",
-        "garantia":     "30 dias de garantia incondicional, sem perguntas.",
-        "suporte":      "Suporte via chat e e-mail, seg–sex das 9h às 18h.",
-        "trial":        "14 dias gratuitos, sem cartão de crédito.",
-        "integração":   "Conectamos com HubSpot, Zapier, Slack, Google Sheets e +50 ferramentas.",
-        "segurança":    "Dados criptografados em repouso e em trânsito. Conformidade com LGPD.",
-    }
-    for key, ans in faqs.items():
-        if key in topic.lower():
-            return ans
-    return "Não tenho uma resposta pronta para isso — posso buscar na web se quiser."
-
-@tool
-def save_lead(
-    nome:             str,
-    email:            str,
-    empresa:          str,
-    num_funcionarios: str,
-    objetivo:         str,
-    dor_atual:        str,
-) -> str:
-    """
-    Salva o lead qualificado.
-     Chame SOMENTE após o usuário confirmar o resumo dos dados.
-     Nunca invente ou assuma dados — use apenas o que o usuário informou.
-    """
-    payload = dict(
-        nome=nome, email=email, empresa=empresa,
-        num_funcionarios=num_funcionarios, objetivo=objetivo, dor_atual=dor_atual,
-    )
-    logger.info(f"[save_lead] {json.dumps(payload, ensure_ascii=False)}")
-    # ← INTEGRE AQUI: webhook, CRM, Google Sheets, banco de dados…
-    return (
-        "✅ Perfeito! Seus dados foram registrados com sucesso.\n"
-        "Nossa equipe vai entrar em contato em até 1 dia útil. "
-        "Fique à vontade para perguntar qualquer coisa enquanto isso!"
-    )
-
-TOOLS = [search_web, get_faq, save_lead]
-
-# ──────────────────────────────────────────────────────────────
-# System Prompts por fase/modo
-# ──────────────────────────────────────────────────────────────
-
-_PROMPT_ESCOLHA = """\
-PERSONA E CONTEXTO
-Você é a Clara, assistente da Next.AI.
-Responda SEMPRE em português. Tom: amigável, empático, profissional.
-
-## Tarefa desta etapa
-Apresente-se de forma breve e explique que para entender como ajudar
-ao máximo, você precisa conhecer um pouco mais sobre o visitante e a empresa dele.
-
-Em seguida, pergunte de forma natural, em tópicos, se ele prefere:\n
-  A) Formulário rápido - perguntas diretas, uma por vez, sem enrolação.\n
-  B) Conversa - um bate-papo onde as informações surgem naturalmente.\n
-
- Não faça NENHUMA outra pergunta agora. Apenas apresente-se e aguarde a escolha.
-"""
+# Temperatura baixa na extração (precisão) e moderada na conversa (naturalidade)
+llm_conversa = ChatGroq(model=GROQ_MODEL, temperature=0.4, api_key=GROQ_API_KEY)
+llm_extracao = ChatGroq(model=GROQ_MODEL, temperature=0, api_key=GROQ_API_KEY)
 
 
-_PROMPT_FORMULARIO = """\
-Você é a Clara, assistente consultiva de vendas da Next.AI.
-Responda SEMPRE em português. Tom: amigável e objetivo.
+# ══════════════════════════════════════════════════════════════════════════════
+#  Perguntas — mesma ordem e mesmo conteúdo do formulário da landing page
+# ══════════════════════════════════════════════════════════════════════════════
 
-## Modo: FORMULÁRIO RÁPIDO
-
-Você vai coletar 6 informações, UMA POR VEZ, na ordem abaixo:
-  1. Nome completo
-  2. E-mail de contato
-  3. Nome da empresa
-  4. Quantidade aproximada de funcionários
-  5. Principal objetivo que busca com nossa solução
-  6. Maior dor ou desafio atual da empresa
-
-### Regras obrigatórias
-- Faça EXATAMENTE UMA pergunta por mensagem.
-- Ao receber cada resposta, confirme rapidamente antes de avançar
-  (ex: "Ótimo, anotado!" ou "Entendido!").
-- Se o usuário desviar com dúvidas, use `get_faq` ou `search_web`, responda,
-  e depois retome pelo campo onde parou.
-- Quando os 6 campos estiverem preenchidos, apresente um resumo claro e peça
-  confirmação antes de chamar `save_lead`.
-
-### Estado atual
-Dados já coletados: {lead_json}
-Próximo campo a coletar: {proximo_campo}
-"""
-
-_PROMPT_CONVERSA = """\
-Você é a Clara, um Consultor Técnico de Pré-vendas (SDR) inteligente da 
-Next.AI. Você atende executivos e gestores de empresas (B2B). Seu tom de voz é profissional, receptivo, educado e consultivo. Você não age como um vendedor insistente, mas como um especialista querendo entender a dor do cliente. 
-
- REGRAS E RESTRIÇÕES ESTRITAS (NUNCA VIOLE) 
-● NUNCA invente funcionalidades, agentes ou serviços que não estão no seu 
-contexto ou catálogo. 
-● NUNCA responda com blocos de texto muito longos. Seja conciso e direto. 
-● NUNCA faça mais de uma pergunta de qualificação na mesma mensagem. 
- CONDIÇÕES DE ENCERRAMENTO (HANDOVER) 
-Dependendo do rumo da conversa, você deve encerrar o papo classificando o 
-atendimento em uma das 4 situações abaixo: 
-● SITUAÇÃO 1 (Qualificado): Se você coletou a dor, o cargo e a urgência, 
-sugira um agente do catálogo (ou a criação de um) e diga que um especialista 
-humano entrará em contato para a negociação final. 
-● SITUAÇÃO 2 (Dúvida Técnica): Se o cliente fizer perguntas técnicas 
-profundas que você não sabe responder, peça desculpas, anote a dúvida e 
-informe que um especialista técnico fará contato. 
-● SITUAÇÃO 3 (Irritação): SE o cliente ficar irritado ou impaciente, PEÇA 
-DESCULPAS imediatamente, pare a qualificação e diga que um gerente 
-assumirá o atendimento. 
-● SITUAÇÃO 4 (Fora de Escopo): Se o cliente quiser algo não relacionado a IA 
-ou software, agradeça o contato e encerre educadamente.
-
-
-### Dados já identificados até agora
-{lead_json}
-"""
-
-# ──────────────────────────────────────────────────────────────
-# Helpers
-# ──────────────────────────────────────────────────────────────
-
-CAMPOS: list[tuple[str, str]] = [
-    ("nome",             "nome completo"),
-    ("email",            "e-mail de contato"),
-    ("empresa",          "nome da empresa"),
-    ("num_funcionarios", "quantidade aproximada de funcionários"),
-    ("objetivo",         "principal objetivo com nossa solução"),
-    ("dor_atual",        "maior dor ou desafio atual"),
+# (coluna no banco, como a Clara pergunta)
+PERGUNTAS_OBRIGATORIAS: list[tuple[str, str]] = [
+    ("nome",              "Qual é o seu nome?"),
+    ("email",             "Qual é o seu e-mail?"),
+    ("cargo",             "Qual é o seu cargo?"),
+    ("empresa",           "Qual é o nome da empresa?"),
+    ("qtd_colaboradores", "Quantos colaboradores a empresa tem, aproximadamente?"),
+    ("area_interesse",    "Qual área vocês têm interesse em automatizar? (financeiro, vendas, RH, logística, atendimento ou outra)"),
+    ("possui_processo",   "Já existe algum processo para essa área? Pode ser um processo definido, algo manual ou informal, ou ainda nada."),
 ]
+OPCIONAIS = ("telefone", "descricao_processo")
 
-def _proximo_campo(lead: LeadData) -> str:
-    for campo, label in CAMPOS:
-        if not lead.get(campo):
-            return label
-    return "— todos coletados, confirme com o usuário e chame save_lead —"
+ROTULOS = {
+    "nome": "Nome", "email": "E-mail", "cargo": "Cargo", "telefone": "Telefone",
+    "empresa": "Empresa", "qtd_colaboradores": "Colaboradores",
+    "area_interesse": "Área de interesse", "possui_processo": "Processo atual",
+    "descricao_processo": "Sobre o processo", "urgencia": "Urgência",
+}
 
-def _montar_prompt(fase: str, lead: LeadData) -> SystemMessage:
-    lead_json = json.dumps(
-        {k: v for k, v in lead.items() if k != "modo"},
-        ensure_ascii=False, indent=2,
-    )
-    if fase == "escolha":
-        return SystemMessage(content=_PROMPT_ESCOLHA)
-    if lead.get("modo") == "formulario":
-        return SystemMessage(content=_PROMPT_FORMULARIO.format(
-            lead_json=lead_json,
-            proximo_campo=_proximo_campo(lead),
-        ))
-    return SystemMessage(content=_PROMPT_CONVERSA.format(lead_json=lead_json))
+TEXTO_OPCOES = {
+    "qtd_colaboradores": {"1-10": "1 a 10", "11-50": "11 a 50", "51-200": "51 a 200",
+                          "201-500": "201 a 500", "501-1000": "501 a 1.000", "1000+": "mais de 1.000"},
+    "area_interesse": {"financeiro": "Financeiro", "vendas": "Vendas e pré-venda", "rh": "RH e recrutamento",
+                       "logistica": "Logística e estoque", "atendimento": "Atendimento ao cliente", "outra": "Outra área"},
+    "possui_processo": {"definido": "Sim, definido", "informal": "Sim, manual ou informal", "nao": "Ainda não"},
+}
 
-def _detectar_modo(texto: str) -> str | None:
-    """Heurística simples para capturar a escolha A/B do usuário."""
-    t = texto.lower()
-    if any(k in t for k in ["formulário", "formulario", "form", "rápido", "rapido", "letra a", "opção a", "opcao a", "opção 1", "1)"]):
-        return "formulario"
-    if any(k in t for k in ["conversa", "bate-papo", "papo", "natural", "letra b", "opção b", "opcao b", "opção 2", "2)"]):
-        return "conversa"
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Estado do grafo
+# ══════════════════════════════════════════════════════════════════════════════
+
+class EstadoClara(TypedDict):
+    sessao_id: str
+    messages: Annotated[list[BaseMessage], add_messages]
+    lead: dict                  # dados já salvos no banco
+    fase: str                   # escolha | coleta | concluido
+    modo: Optional[str]         # formulario | conversa
+    extraido: dict              # o que foi extraído nesta mensagem
+    resposta: str               # texto final da Clara
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Extração estruturada
+# ══════════════════════════════════════════════════════════════════════════════
+
+class DadosExtraidos(BaseModel):
+    """Dados que o VISITANTE informou na última mensagem. Deixe null o que não foi dito."""
+
+    escolha_modo: Optional[Literal["formulario", "conversa"]] = Field(
+        None, description="Se o visitante escolheu formulário rápido (A) ou conversa (B).")
+    nome: Optional[str] = Field(None, description="Nome da pessoa.")
+    email: Optional[str] = Field(None, description="E-mail da pessoa.")
+    cargo: Optional[str] = Field(None, description="Cargo ou função na empresa.")
+    telefone: Optional[str] = Field(None, description="Telefone ou WhatsApp.")
+    empresa: Optional[str] = Field(None, description="Nome da empresa.")
+    qtd_colaboradores: Optional[str] = Field(
+        None, description="Quantidade de colaboradores como o visitante disse (ex.: '50', 'uns 300', '11-50').")
+    area_interesse: Optional[Literal["financeiro", "vendas", "rh", "logistica", "atendimento", "outra"]] = Field(
+        None, description="Área que quer automatizar. comercial/pré-venda=vendas; recursos humanos=rh; "
+                          "estoque/entregas=logistica; suporte/SAC=atendimento; qualquer outra=outra.")
+    possui_processo: Optional[Literal["definido", "informal", "nao"]] = Field(
+        None, description="definido=processo documentado; informal=existe mas é manual/informal; nao=não existe.")
+    descricao_processo: Optional[str] = Field(None, description="Detalhes sobre como o processo funciona hoje.")
+    urgencia: Optional[str] = Field(None, description="Quando precisa da solução (ex.: 'este mês', 'sem pressa').")
+    confirmou_resumo: Optional[bool] = Field(
+        None, description="true somente se a Clara mostrou um resumo dos dados e o visitante confirmou que está correto.")
+
+
+_PROMPT_EXTRACAO = """\
+Você extrai dados de uma conversa de atendimento.
+Considere SOMENTE o que o VISITANTE afirmou na última mensagem dele.
+A pergunta anterior da Clara serve apenas para entender a resposta
+(ex.: se a Clara perguntou o cargo e ele respondeu "Diretor", cargo = "Diretor").
+Nunca invente nem complete dados. Se algo não foi dito, deixe null.
+"""
+
+_extrator = llm_extracao.with_structured_output(DadosExtraidos)
+
+
+def _faixa_colaboradores(valor: str | None) -> str | None:
+    """Converte '50', 'uns 300 funcionários', 'mais de mil' em uma das faixas do banco."""
+    if not valor:
+        return None
+    texto = valor.lower().replace(".", "").strip()
+    if texto in TEXTO_OPCOES["qtd_colaboradores"]:
+        return texto
+    if "mil" in texto and not re.search(r"\d", texto):
+        return "1000+"
+    numeros = [int(n) for n in re.findall(r"\d+", texto)]
+    if not numeros:
+        return None
+    n = max(numeros)
+    if "mil" in texto and n < 100:
+        n *= 1000
+    for limite, faixa in ((10, "1-10"), (50, "11-50"), (200, "51-200"), (500, "201-500"), (1000, "501-1000")):
+        if n <= limite:
+            return faixa
+    return "1000+"
+
+
+def _email_valido(valor: str | None) -> str | None:
+    if valor and re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]{2,}", valor.strip()):
+        return valor.strip().lower()
     return None
 
-def _capturar_email(texto: str, lead: LeadData) -> LeadData:
-    """Extrai automaticamente e-mail digitado pelo usuário."""
-    if not lead.get("email"):
-        match = re.search(r"[\w.+-]+@[\w-]+\.\w{2,}", texto)
-        if match:
-            lead = {**lead, "email": match.group()}
-    return LeadData(**lead)
 
-def _extract_text(content) -> str:
-    """Normaliza qualquer formato de retorno do LLM para string pura."""
-    if isinstance(content, list):
-        parts = [
-            block.get("text", "") if isinstance(block, dict) and block.get("type") == "text"
-            else block if isinstance(block, str) else ""
-            for block in content
-        ]
-        raw = " ".join(p for p in parts if p).strip()
-    elif isinstance(content, dict):
-        raw = str(content.get("text", content)).strip()
-    elif isinstance(content, str):
-        raw = content.strip()
-        if raw.startswith(("[", "{")):
-            try:
-                result = _extract_text(ast.literal_eval(raw))
-                if result:
-                    return result
-            except (ValueError, SyntaxError):
-                pass
-    else:
-        raw = str(content).strip()
+def extrair_dados(ultima_pergunta: str, mensagem_usuario: str) -> dict:
+    """Chama o LLM em modo estruturado e normaliza o resultado."""
+    try:
+        dados: DadosExtraidos = _extrator.invoke([
+            SystemMessage(content=_PROMPT_EXTRACAO),
+            HumanMessage(content=f"Última pergunta da Clara:\n{ultima_pergunta or '(nenhuma)'}\n\n"
+                                 f"Última mensagem do visitante:\n{mensagem_usuario}"),
+        ])
+    except Exception as exc:  # extração falhou → a conversa continua sem salvar nada
+        logger.warning("Extração falhou: %s", exc)
+        return {}
 
-    raw = re.sub(r"<function=[^>]+>.*?</function>", "", raw, flags=re.DOTALL)
-    raw = re.sub(r'\{"nome\".*?\}', "", raw, flags=re.DOTALL)
-    return raw.strip()
+    resultado = {k: v for k, v in dados.model_dump().items() if v not in (None, "")}
+    if "qtd_colaboradores" in resultado:
+        faixa = _faixa_colaboradores(resultado["qtd_colaboradores"])
+        resultado["qtd_colaboradores"] = faixa
+    if "email" in resultado:
+        resultado["email"] = _email_valido(resultado["email"])
+    return {k: v for k, v in resultado.items() if v not in (None, "")}
 
-# ──────────────────────────────────────────────────────────────
-# Nó principal do Grafo
-# ──────────────────────────────────────────────────────────────
 
-def agente_node(state: SessionState) -> dict:
-    fase = state["fase"]
-    lead = dict(state["lead"])
-    msgs = list(state["messages"])
-    ultima_msg = msgs[-1].content if msgs else ""
+# ══════════════════════════════════════════════════════════════════════════════
+#  Prompts da Clara
+# ══════════════════════════════════════════════════════════════════════════════
 
-    # 1. Detectar escolha de modo (só na fase "escolha")
+# VALIDAR: apresentação da Interagente e texto do aviso de privacidade
+_PERSONA = """\
+Você é a Clara, agente de atendimento da Interagente, solução de agentes de IA do Grupo Algar.
+Responda sempre em português do Brasil, com tom cordial, profissional e consultivo.
+
+REGRAS QUE VOCÊ NUNCA QUEBRA
+- Mensagens curtas: no máximo 3 frases curtas, e no máximo UMA pergunta por mensagem.
+- Nunca invente preços, prazos, garantias, testes grátis, integrações ou funcionalidades.
+  Para dúvidas sobre a Interagente, use a ferramenta consultar_faq. Se ela mandar ENCAMINHAR,
+  diga que um especialista do time vai responder diretamente.
+- Nunca peça um dado que já está em "Dados já coletados".
+- Exemplos de agentes: Nina (financeiro), Léo (vendas), Sofia (RH), Maya (logística).
+  Também é possível desenhar um agente para outra área. Não cite outros agentes.
+"""
+
+_PROMPT_ESCOLHA = _PERSONA + """
+ETAPA: boas-vindas.
+Apresente-se em uma frase. Diga que, para entender como ajudar, vai fazer algumas perguntas
+sobre a pessoa e a empresa, e que os dados serão usados apenas para o contato do nosso time,
+conforme a política de privacidade.
+Depois pergunte, em duas linhas, como ela prefere seguir:
+A) Formulário rápido, com perguntas diretas
+B) Conversa, em um bate-papo mais livre
+Não faça nenhuma outra pergunta.
+"""
+
+_PROMPT_FORMULARIO = _PERSONA + """
+ETAPA: coleta em modo FORMULÁRIO RÁPIDO.
+Confirme a resposta anterior em poucas palavras ("Anotado!") e faça a próxima pergunta,
+exatamente com este sentido:
+
+PRÓXIMA PERGUNTA: {proxima_pergunta}
+
+Se o visitante fizer uma pergunta no meio, responda (consultar_faq) e depois retome a próxima pergunta.
+
+Dados já coletados:
+{dados}
+"""
+
+_PROMPT_CONVERSA = _PERSONA + """
+ETAPA: coleta em modo CONVERSA.
+Converse de forma consultiva para entender o negócio e a necessidade. Ao longo da conversa,
+obtenha naturalmente os dados que faltam, um por vez, sem parecer um questionário.
+Também vale entender a urgência (quando a pessoa precisa da solução).
+
+Dados que ainda faltam: {faltando}
+Sugestão de próximo dado a buscar: {proxima_pergunta}
+
+ENCERRAMENTOS ESPECIAIS (use a ferramenta registrar_encerramento):
+- duvida_tecnica: pergunta técnica profunda que você não sabe responder. Anote a dúvida
+  em "observacao" e diga que um especialista técnico fará contato.
+- irritacao: se a pessoa ficar irritada ou impaciente, peça desculpas, pare as perguntas
+  e diga que alguém do time vai assumir o atendimento.
+- fora_escopo: se a pessoa quiser algo sem relação com IA ou automação, agradeça e encerre.
+
+Dados já coletados:
+{dados}
+"""
+
+_PROMPT_CONFIRMACAO = _PERSONA + """
+ETAPA: confirmação.
+Todos os dados obrigatórios foram coletados. Mostre o resumo abaixo exatamente como está,
+em lista, e pergunte se está tudo certo. Se ainda faltar telefone ou detalhes do processo,
+diga em uma frase que a pessoa pode acrescentar, se quiser.
+Se o visitante corrigir algum dado, agradeça e mostre o resumo atualizado.
+
+RESUMO:
+{resumo}
+"""
+
+_PROMPT_CONCLUIDO = _PERSONA + """
+ETAPA: atendimento concluído.
+Os dados já foram registrados e um especialista do time vai entrar em contato.
+Responda dúvidas de forma breve (consultar_faq) e não peça mais dados.
+Se for a primeira mensagem desta etapa, agradeça e confirme o próximo passo.
+"""
+
+
+def _faltando(lead: dict) -> list[tuple[str, str]]:
+    return [(campo, pergunta) for campo, pergunta in PERGUNTAS_OBRIGATORIAS if not lead.get(campo)]
+
+
+def _formatar_dados(lead: dict) -> str:
+    linhas = []
+    for campo, rotulo in ROTULOS.items():
+        valor = lead.get(campo)
+        if valor:
+            valor = TEXTO_OPCOES.get(campo, {}).get(valor, valor)
+            linhas.append(f"- {rotulo}: {valor}")
+    return "\n".join(linhas) or "(nenhum ainda)"
+
+
+def _montar_prompt(estado: EstadoClara) -> str:
+    fase, lead = estado["fase"], estado["lead"]
+    faltando = _faltando(lead)
+
     if fase == "escolha":
-        modo = _detectar_modo(ultima_msg)
-        if modo:
-            lead["modo"] = modo
-            fase = "coleta"
+        return _PROMPT_ESCOLHA
+    if fase == "concluido":
+        return _PROMPT_CONCLUIDO
+    if not faltando:
+        return _PROMPT_CONFIRMACAO.format(resumo=_formatar_dados(lead))
 
-    # 2. Capturar e-mail explícito digitado pelo usuário
-    lead = dict(_capturar_email(ultima_msg, LeadData(**lead)))
+    proxima = faltando[0][1]
+    if estado["modo"] == "formulario":
+        return _PROMPT_FORMULARIO.format(proxima_pergunta=proxima, dados=_formatar_dados(lead))
+    return _PROMPT_CONVERSA.format(
+        faltando=", ".join(ROTULOS[c] for c, _ in faltando),
+        proxima_pergunta=proxima,
+        dados=_formatar_dados(lead),
+    )
 
-    # 3. Checar conclusão da coleta
-    if fase == "coleta" and all(lead.get(c) for c, _ in CAMPOS):
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Ferramentas da Clara (criadas por sessão, para saber onde gravar)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _ferramentas(sessao_id: str) -> list:
+
+    @tool
+    def consultar_faq(pergunta: str) -> str:
+        """Consulta as respostas aprovadas sobre a Interagente (sistemas, prazos de projeto,
+        dados, autonomia do agente, como começar, exemplos de agentes). Use antes de responder
+        qualquer dúvida sobre a empresa ou o serviço."""
+        return faq.buscar_resposta(pergunta)
+
+    @tool
+    def registrar_encerramento(
+        situacao: Literal["duvida_tecnica", "irritacao", "fora_escopo"],
+        observacao: str = "",
+    ) -> str:
+        """Registra que o atendimento foi encerrado e repassado ao time humano.
+        situacao: duvida_tecnica | irritacao | fora_escopo.
+        observacao: resumo curto do motivo (ex.: a dúvida técnica feita)."""
+        repo.encerrar_atendimento(sessao_id, situacao, observacao or None)
+        logger.info("Encerramento | sessao=%s | %s", sessao_id, situacao)
+        return "Registrado. Informe ao visitante o próximo passo, sem pedir mais dados."
+
+    return [consultar_faq, registrar_encerramento]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Nós do grafo
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _ultima(mensagens: list[BaseMessage], tipo) -> str:
+    for msg in reversed(mensagens):
+        if isinstance(msg, tipo):
+            return _texto(msg.content)
+    return ""
+
+
+def no_extrair(estado: EstadoClara) -> dict:
+    mensagens = estado["messages"]
+    if not mensagens or not isinstance(mensagens[-1], HumanMessage):
+        return {"extraido": {}}  # saudação inicial: nada a extrair
+
+    pergunta = _ultima(mensagens[:-1], AIMessage)
+    extraido = extrair_dados(pergunta, _texto(mensagens[-1].content))
+
+    campos_lead = {k: v for k, v in extraido.items() if k in repo.CAMPOS_LEAD}
+    lead = estado["lead"]
+    if campos_lead:
+        lead = repo.salvar_dados_do_chat(estado["sessao_id"], campos_lead) or lead
+
+    logger.info("Extraído | sessao=%s | campos=%s", estado["sessao_id"], sorted(extraido))
+    return {"extraido": extraido, "lead": dict(lead or {})}
+
+
+def no_atualizar_fase(estado: EstadoClara) -> dict:
+    fase, modo = estado["fase"], estado["modo"]
+    extraido, lead = estado["extraido"], estado["lead"]
+    sessao_id = estado["sessao_id"]
+
+    # 1. Escolha do modo. Seguir a conversa após o aviso conta como aceite.
+    #    VALIDAR com o jurídico se esse aceite é suficiente.
+    if fase == "escolha" and (extraido.get("escolha_modo") or len(extraido) > 0):
+        modo = extraido.get("escolha_modo") or "conversa"
+        fase = "coleta"
+        repo.registrar_consentimento_sessao(sessao_id, CONSENTIMENTO_VERSAO)
+
+    # 2. Confirmação do resumo → lead qualificado
+    if fase == "coleta" and not _faltando(lead) and extraido.get("confirmou_resumo") is True:
+        lead = repo.encerrar_atendimento(sessao_id, "qualificado") or lead
         fase = "concluido"
 
-    # 4. Criar agente ReAct com prompt ajustado à fase
-    system = _montar_prompt(fase, LeadData(**lead))
-    react  = create_react_agent(model=llm, tools=TOOLS, prompt=system)
+    if (fase, modo) != (estado["fase"], estado["modo"]):
+        repo.atualizar_sessao(sessao_id, fase=fase, modo=modo)
+        logger.info("Fase | sessao=%s | %s → %s | modo=%s", sessao_id, estado["fase"], fase, modo)
 
+    return {"fase": fase, "modo": modo, "lead": dict(lead or {})}
+
+
+def no_responder(estado: EstadoClara) -> dict:
+    agente = create_agent(
+        model=llm_conversa,
+        tools=_ferramentas(estado["sessao_id"]),
+        system_prompt=_montar_prompt(estado),
+    )
     try:
-        result       = react.invoke({"messages": msgs})
-        new_messages = result["messages"][len(msgs):]
-    except Exception as e:
-        logger.error(f"[agente_node] Erro: {e}")
-        new_messages = [AIMessage(content="Desculpe, tive um problema interno. Pode repetir?")]
+        resultado = agente.invoke({"messages": estado["messages"]})
+        resposta = _texto(resultado["messages"][-1].content)
+    except Exception as exc:
+        logger.exception("Erro ao gerar resposta: %s", exc)
+        resposta = ""
 
-    return {
-        "messages": new_messages,
-        "lead":     LeadData(**lead),
-        "fase":     fase,
+    if not resposta:
+        resposta = "Desculpe, tive um problema para responder agora. Pode repetir, por favor?"
+
+    # Se uma ferramenta encerrou o atendimento, a fase no banco já mudou
+    sessao = repo.obter_ou_criar_sessao(estado["sessao_id"])
+    return {"resposta": resposta, "fase": sessao["fase"], "messages": [AIMessage(content=resposta)]}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Grafo
+# ══════════════════════════════════════════════════════════════════════════════
+
+_builder = StateGraph(EstadoClara)
+_builder.add_node("extrair", no_extrair)
+_builder.add_node("atualizar_fase", no_atualizar_fase)
+_builder.add_node("responder", no_responder)
+_builder.add_edge(START, "extrair")
+_builder.add_edge("extrair", "atualizar_fase")
+_builder.add_edge("atualizar_fase", "responder")
+_builder.add_edge("responder", END)
+
+grafo = _builder.compile()
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Utilitários e API pública (usada pelo app.py)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _texto(conteudo) -> str:
+    """Normaliza o retorno do LLM (string ou lista de blocos) para texto puro."""
+    if isinstance(conteudo, list):
+        partes = [b.get("text", "") if isinstance(b, dict) else str(b) for b in conteudo]
+        conteudo = " ".join(p for p in partes if p)
+    texto = str(conteudo or "")
+    # Remove marcações de chamada de função que alguns modelos deixam vazar no texto
+    texto = re.sub(r"<function=[^>]+>.*?</function>", "", texto, flags=re.DOTALL)
+    return texto.strip()
+
+
+def _historico(sessao_id: str) -> list[BaseMessage]:
+    return [
+        HumanMessage(content=m["conteudo"]) if m["papel"] == "human" else AIMessage(content=m["conteudo"])
+        for m in repo.carregar_mensagens(sessao_id)
+    ]
+
+
+def processar_mensagem(sessao_id: str, mensagem: Optional[str]) -> dict:
+    """
+    Processa uma mensagem do visitante (ou gera a saudação, se mensagem=None)
+    e grava tudo no banco. Retorna {"resposta", "fase", "lead"}.
+    """
+    sessao = repo.obter_ou_criar_sessao(sessao_id)
+    mensagens = _historico(sessao_id)
+    if mensagem:
+        mensagens.append(HumanMessage(content=mensagem))
+
+    estado_inicial: EstadoClara = {
+        "sessao_id": sessao_id,
+        "messages": mensagens,
+        "lead": dict(repo.obter_lead_da_sessao(sessao_id) or {}),
+        "fase": sessao["fase"],
+        "modo": sessao["modo"],
+        "extraido": {},
+        "resposta": "",
     }
 
-# ──────────────────────────────────────────────────────────────
-# Compilação do Grafo
-# ──────────────────────────────────────────────────────────────
+    final = grafo.invoke(estado_inicial)
 
-_builder = StateGraph(SessionState)
-_builder.add_node("agente", agente_node)
-_builder.add_edge(START, "agente")
-_builder.add_edge("agente", END)
+    novas = [("human", mensagem)] if mensagem else []
+    novas.append(("ai", final["resposta"]))
+    repo.salvar_mensagens(sessao_id, novas)
 
-graph = _builder.compile()
-
-# ──────────────────────────────────────────────────────────────
-# API pública — use com FastAPI, Flask, websockets, etc.
-# ──────────────────────────────────────────────────────────────
-
-def iniciar_sessao() -> SessionState:
-    """Retorna um estado inicial limpo para uma nova sessão de usuário."""
-    return SessionState(messages=[], lead=LeadData(), fase="escolha")
-
-def chat(user_input: str, state: SessionState) -> tuple[str, SessionState]:
-    """
-    Processa uma mensagem do usuário.
-
-    Parâmetros
-    ----------
-    user_input : str          — texto enviado pelo usuário
-    state      : SessionState — estado atual (preserve entre chamadas)
-
-    Retorna
-    -------
-    tuple[str, SessionState]  — resposta em texto + estado atualizado
-    """
-    state["messages"].append(HumanMessage(content=user_input))
-    new_state = graph.invoke(state)
-    response  = _extract_text(new_state["messages"][-1].content)
-    return response, new_state
-
-# ──────────────────────────────────────────────────────────────
-# CLI de teste  →  python agent.py
-# ──────────────────────────────────────────────────────────────
-
-def main() -> None:
-    print("\n" + "═" * 60)
-    print("  Clara - Agente de Conversação · Landing Page")
-    print("  Digite 'sair' para encerrar.")
-    print("═" * 60 + "\n")
-
-    state = iniciar_sessao()
-
-    # Saudação inicial automática
-    resposta, state = chat("oi", state)
-    print(f"Clara: {resposta}\n")
-
-    while True:
-        try:
-            user_input = input("Você: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\nEncerrando...")
-            break
-
-        if not user_input:
-            continue
-        if user_input.lower() in {"sair", "exit", "quit", "obrigada", "isso é tudo"}:
-            print("Clara: Foi um prazer conversar! Até logo")
-            break
-
-        resposta, state = chat(user_input, state)
-        print(f"\nClara: {resposta}\n")
-        logger.debug(f"[estado] fase={state['fase']} | lead={state['lead']}")
+    return {"resposta": final["resposta"], "fase": final["fase"], "lead": final["lead"]}
 
 
+def historico_publico(sessao_id: str) -> list[dict]:
+    """Histórico no formato do chat.js (papel 'user' | 'ai')."""
+    return [
+        {"role": "user" if m["papel"] == "human" else "ai", "content": m["conteudo"]}
+        for m in repo.carregar_mensagens(sessao_id)
+    ]
+
+
+# ── Teste rápido no terminal:  python agent.py ─────────────────────────────────
 if __name__ == "__main__":
-    main()
+    import uuid
+
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s — %(message)s")
+    repo.abrir_pool()
+    repo.aplicar_schema()
+    sid = f"cli-{uuid.uuid4()}"
+    print("\nClara (digite 'sair' para encerrar)\n")
+    print("Clara:", processar_mensagem(sid, None)["resposta"], "\n")
+    try:
+        while (texto := input("Você: ").strip()).lower() != "sair":
+            if texto:
+                r = processar_mensagem(sid, texto)
+                print(f"\nClara: {r['resposta']}\n   [fase={r['fase']}]\n")
+    finally:
+        repo.fechar_pool()
