@@ -1,71 +1,68 @@
 /**
  * animations.js
- * Animações de entrada baseadas em IntersectionObserver.
- * Adiciona classe `.is-visible` quando o elemento entra na viewport.
- * As transições CSS são definidas em components.css / sections.css.
+ * Entrada suave dos blocos quando aparecem na tela.
+ * - Anima uma única vez por elemento
+ * - Desligado por completo quando o usuário prefere menos movimento
  */
 
 'use strict';
 
-import { $$, createObserver } from './utils.js';
+import { $$, createObserver, prefersReducedMotion } from './utils.js';
 
-// Elementos que devem animar ao entrar na viewport
 const ANIMATED_SELECTORS = [
   '.card',
-  '.stat',
-  '.testimonial',
-  '.timeline__item',
-  '.demo__wrapper',
+  '.agent-card',
+  '.metric',
+  '.cenario',
+  '.step',
   '.form-card',
 ];
 
-// Adiciona estilo base via JS para não depender de CSS extra
+const MAX_STAGGER_ITEMS = 4; // evita atrasos longos em grids grandes
+const STAGGER_MS = 80;
+
 const injectBaseStyles = () => {
   const style = document.createElement('style');
   style.textContent = `
     [data-animate] {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
     [data-animate].is-visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
   `;
   document.head.appendChild(style);
 };
 
 const setupAnimations = () => {
+  if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+
+  const elements = $$(ANIMATED_SELECTORS.join(', '));
+  if (!elements.length) return;
+
   injectBaseStyles();
 
-  const elements = document.querySelectorAll(ANIMATED_SELECTORS.join(', '));
-
   const observer = createObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
 
       const el = entry.target;
-
-      // Delay escalonado entre irmãos
       const siblings = [...(el.parentElement?.children ?? [])];
-      const index    = siblings.indexOf(el);
-      el.style.transitionDelay = `${index * 80}ms`;
+      const index = Math.min(siblings.indexOf(el), MAX_STAGGER_ITEMS - 1);
 
+      el.style.transitionDelay = `${Math.max(index, 0) * STAGGER_MS}ms`;
       el.classList.add('is-visible');
-      observer.unobserve(el); // anima apenas uma vez
+      observer.unobserve(el);
     });
   });
 
-  elements.forEach(el => {
+  elements.forEach((el) => {
     el.setAttribute('data-animate', '');
     observer.observe(el);
   });
 };
 
-// Inicia após o DOM estar pronto
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupAnimations);
-} else {
-  setupAnimations();
-}
+setupAnimations();
