@@ -1,139 +1,92 @@
-/* ══════════════════════════════════════════════════════════
-   responsive.css — Mobile-first.
-   Base (sem media query) = mobile, definida em
-   components.css / sections.css. Aqui só progressivamente
-   adicionamos/expandimos layout para telas maiores.
-   Breakpoints: tablet ≥768px · desktop ≥1024px
-══════════════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────────
+   responsive.css – Ajustes por largura de tela
+   Mobile-first, com os breakpoints do site da Algar:
+   544px · 768px · 1024px · 1440px
+───────────────────────────────────────────── */
 
-/* ════════════════════════ TABLET ≥768px ════════════════════════ */
+
+/* ══════════════ ≥ 544px – celular grande ══════════════ */
+@media (min-width: 544px) {
+
+  .topbar__brand { display: block; }
+
+  /* A partir daqui os agentes voltam a ser grade */
+  .agents-grid {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+
+  .form-row { grid-template-columns: repeat(2, 1fr); }
+
+  .perks__list { grid-template-columns: repeat(2, 1fr); }
+
+  .float-chat { padding: 0.8rem 1.25rem; }
+  .float-chat__label { display: inline; }
+}
+
+
+/* ══════════════ ≥ 768px – tablet ══════════════ */
 @media (min-width: 768px) {
 
-  .hide-mobile { display: inline; }
+  .section { padding-block: var(--space-2xl); }
 
-  /* Navbar: mostra os links principais, esconde hamburger */
-  .navbar__nav { display: block; }
+  .shortcuts__list { grid-template-columns: repeat(4, 1fr); }
+
+  /* Com 4 colunas, os cantos arredondados mudam de lugar */
+  .shortcuts__list li:first-child  { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+  .shortcuts__list li:nth-child(2),
+  .shortcuts__list li:nth-child(3) { border-radius: 0; }
+  .shortcuts__list li:last-child   { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+
+  .cards-grid   { grid-template-columns: repeat(2, 1fr); }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .cenarios-grid{ grid-template-columns: repeat(3, 1fr); }
+
+  .agent-detail__grid { grid-template-columns: 1fr 1fr; gap: var(--space-xl); }
+
+  .cta-final__grid { grid-template-columns: 5fr 7fr; gap: var(--space-xl); }
+  .cta-final__visual { display: block; }
+
+  .footer__inner { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ══════════════ ≥ 1024px – desktop ══════════════ */
+@media (min-width: 1024px) {
+
+  /* Navegação completa no lugar do hambúrguer */
+  .navbar__nav,
+  .navbar__cta { display: flex; }
   .navbar__hamburger,
-  .navbar__mobile { display: none; }
-  .navbar .btn--primary { display: inline-flex; }
+  .navbar__mobile { display: none !important; }
 
-  /* Onde Atuamos */
-  .cards-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-md);
+  .cards-grid   { grid-template-columns: repeat(3, 1fr); }
+  .agents-grid  { grid-template-columns: repeat(4, 1fr); }
+  .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+  .perks__list  { grid-template-columns: repeat(4, 1fr); }
+
+  /* Etapas em linha, com a linha de ligação na horizontal */
+  .steps { grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+
+  .steps::before {
+    left: 20px;
+    right: 20px;
+    top: 19px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
   }
 
-  /* Resultados */
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-md);
-  }
+  .step { padding-left: 0; }
+  .step__number { position: relative; }
 
-  /* Parceiros */
-  .testimonials-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Exemplos de agentes */
-  .agents-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-md);
-  }
-
-   .agents-showcase__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-}
-
-@media (min-width: 640px) {
-  .agents-showcase__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .agents-showcase__grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-  /* Nossa História */
-  .history-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-md);
-  }
-
-  /* Footer */
-  .footer__inner {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .footer__nav { min-width: 160px; }
+  .footer__inner { grid-template-columns: 2fr repeat(4, 1fr); }
 }
 
 
-/* ════════════════════════ DESKTOP ≥1024px ════════════════════════ */
-@media (min-width: 1024px) {
-
-  /* Hero — texto alinhado à esquerda com gradiente ocupando a tela toda */
-  .hero__content {
-    max-width: 640px;
-  }
-
-  /* Onde Atuamos — mantém 3 colunas, mais respiro */
-  .cards-grid {
-    gap: var(--space-lg);
-  }
-
-  /* Resultados */
-  .stats-grid { gap: var(--space-lg); }
-
-  /* Parceiros */
-  .testimonials-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-lg);
-  }
-
-  /* Exemplos de agentes */
-  .agents-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  /* Íris — duas colunas lado a lado */
-  .iris-pratica__grid {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--space-2xl);
-  }
-
-  .iris-pratica__info,
-  .chat-mock { flex: 1; min-width: 0; }
-
-  /* Nossa História */
-  .history-grid { gap: var(--space-lg); }
-
-  .history-card--active {
-    transform: translateY(-6px);
-  }
-
-  /* CTA Final — duas colunas lado a lado */
-  .cta-final__grid {
-    flex-direction: row;
-    align-items: stretch;
-    gap: var(--space-2xl);
-  }
-
-  .cta-final__visual,
-  .cta-final__panel { flex: 1; min-width: 0; }
-
-  .cta-final__visual { min-height: 100%; }
-}
-
-
-/* ════════════════════════ DESKTOP LARGO ≥1280px ════════════════════════ */
-@media (min-width: 1280px) {
-  .hero__content { max-width: 700px; }
+/* ══════════════ ≥ 1440px – telas largas ══════════════ */
+@media (min-width: 1440px) {
+  :root { --container-max: 1280px; }
 }
