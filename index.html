@@ -482,34 +482,102 @@
         <p class="form-card__label">Prefere que a gente entre em contato?</p>
 
         <form id="contact-form" novalidate>
-          <div class="form-group">
-            <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" autocomplete="name" />
-            <span class="form-error" role="alert"></span>
+          <p class="form-hint">Campos com <span aria-hidden="true">*</span><span class="visually-hidden">asterisco</span> são obrigatórios.</p>
+
+          <!-- ── Sobre você ── -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome <span class="form-required" aria-hidden="true">*</span></label>
+              <input type="text" id="nome" name="nome" autocomplete="name" required />
+              <span class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="cargo">Cargo <span class="form-required" aria-hidden="true">*</span></label>
+              <input type="text" id="cargo" name="cargo" autocomplete="organization-title" required />
+              <span class="form-error" role="alert"></span>
+            </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="email">E-mail corporativo</label>
-              <input type="email" id="email" name="email" autocomplete="email" />
+              <label for="email">E-mail <span class="form-required" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
               <span class="form-error" role="alert"></span>
             </div>
             <div class="form-group">
               <label for="telefone">Telefone <span class="form-optional">(opcional)</span></label>
-              <input type="tel" id="telefone" name="telefone" autocomplete="tel" />
+              <input type="tel" id="telefone" name="telefone" autocomplete="tel" inputmode="tel" />
               <span class="form-error" role="alert"></span>
             </div>
           </div>
 
+          <!-- ── Sobre a empresa ── -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empresa">Nome da empresa <span class="form-required" aria-hidden="true">*</span></label>
+              <input type="text" id="empresa" name="empresa" autocomplete="organization" required />
+              <span class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="qtd_colaboradores">Quantidade de colaboradores <span class="form-required" aria-hidden="true">*</span></label>
+              <select id="qtd_colaboradores" name="qtd_colaboradores" required>
+                <option value="">Selecione</option>
+                <option value="1-10">1 a 10</option>
+                <option value="11-50">11 a 50</option>
+                <option value="51-200">51 a 200</option>
+                <option value="201-500">201 a 500</option>
+                <option value="501-1000">501 a 1.000</option>
+                <option value="1000+">Mais de 1.000</option>
+              </select>
+              <span class="form-error" role="alert"></span>
+            </div>
+          </div>
+
+          <!-- ── Sobre o processo ── -->
           <div class="form-group">
-            <label for="empresa">Empresa <span class="form-optional">(opcional)</span></label>
-            <input type="text" id="empresa" name="empresa" autocomplete="organization" />
+            <label for="area_interesse">Qual área você tem interesse em automatizar? <span class="form-required" aria-hidden="true">*</span></label>
+            <select id="area_interesse" name="area_interesse" required>
+              <option value="">Selecione</option>
+              <option value="financeiro">Financeiro</option>
+              <option value="vendas">Vendas e pré-venda</option>
+              <option value="rh">RH e recrutamento</option>
+              <option value="logistica">Logística e estoque</option>
+              <option value="atendimento">Atendimento ao cliente</option>
+              <option value="outra">Outra área</option>
+            </select>
             <span class="form-error" role="alert"></span>
           </div>
 
+          <fieldset class="form-group form-choice">
+            <legend>Já tem algum processo para essa área? <span class="form-required" aria-hidden="true">*</span></legend>
+            <label class="form-choice__option">
+              <input type="radio" name="possui_processo" value="definido" required />
+              <span>Sim, um processo definido</span>
+            </label>
+            <label class="form-choice__option">
+              <input type="radio" name="possui_processo" value="informal" />
+              <span>Sim, mas é manual ou informal</span>
+            </label>
+            <label class="form-choice__option">
+              <input type="radio" name="possui_processo" value="nao" />
+              <span>Ainda não</span>
+            </label>
+            <span class="form-error" role="alert"></span>
+          </fieldset>
+
           <div class="form-group">
-            <label for="desafio">Qual processo você gostaria de automatizar?</label>
-            <textarea id="desafio" name="desafio" rows="3"></textarea>
+            <label for="descricao_processo">Conte um pouco sobre esse processo <span class="form-optional">(opcional)</span></label>
+            <textarea id="descricao_processo" name="descricao_processo" rows="3" maxlength="2000"></textarea>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <!-- ── LGPD ── -->
+          <!-- VALIDAR: texto e link da política de privacidade com o jurídico -->
+          <div class="form-group form-consent">
+            <label class="form-choice__option">
+              <input type="checkbox" name="consentimento" value="sim" required />
+              <span>Concordo que a Interagente use estes dados para entrar em contato sobre a minha solicitação, conforme a <a href="#">política de privacidade</a>.</span>
+            </label>
             <span class="form-error" role="alert"></span>
           </div>
 
