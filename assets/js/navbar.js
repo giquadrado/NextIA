@@ -92,12 +92,20 @@ $$('section[id]').forEach((section) => {
 });
 
 /* ── Botão flutuante da Clara ────────────────────────────── */
-if (floatChat && contato) {
+// Fica escondido enquanto o hero ou o contato estão na tela
+const hero = $('.hero');
+const floatTargets = [hero, contato].filter(Boolean);
+
+if (floatChat && floatTargets.length) {
+  const visible = new Set();
+
   const floatObserver = createObserver((entries) => {
     entries.forEach((entry) => {
-      floatChat.classList.toggle('is-hidden', entry.isIntersecting);
+      if (entry.isIntersecting) visible.add(entry.target);
+      else visible.delete(entry.target);
     });
+    floatChat.classList.toggle('is-hidden', visible.size > 0);
   }, { rootMargin: '0px', threshold: 0.2 });
 
-  floatObserver.observe(contato);
+  floatTargets.forEach((el) => floatObserver.observe(el));
 }
