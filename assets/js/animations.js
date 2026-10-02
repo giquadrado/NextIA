@@ -11,7 +11,6 @@ import { $$, createObserver, prefersReducedMotion } from './utils.js';
 
 const ANIMATED_SELECTORS = [
   '.card',
-  '.agent-card',
   '.metric',
   '.cenario',
   '.step',
