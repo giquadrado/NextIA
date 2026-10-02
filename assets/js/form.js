@@ -1,217 +1,191 @@
 /**
  * form.js
- * Validação do formulário de contato.
- *  - Validação em tempo real (blur) e no submit
- *  - Feedback visual via classes e mensagens de erro
- *  - Envio assíncrono (pronto para integrar com backend / API)
+ * Formulário de contato:
+ *  - Validação ao sair do campo e no envio
+ *  - Máscara de telefone
+ *  - Preenchimento automático quando o visitante escolhe um agente
+ *  - Envio assíncrono (endpoint ainda não configurado: ver bloco "Integração")
  */
 
 'use strict';
 
-import { $, $$ } from './utils.js';
+import { $, $$, INTEREST_EVENT } from './utils.js';
 
 const form = $('#contact-form');
 
-if (!form) {
-  // Sai silenciosamente se o formulário não existir na página
-  throw new Error('[form.js] Formulário #contact-form não encontrado.');
+if (form) initForm(form);
+
+function initForm(form) {
+  /* ── Regras de validação ──────────────────────────────── */
+  const RULES = {
+    nome:     { required: true,  minLength: 3, label: 'Nome' },
+    email:    { required: true,  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, label: 'E-mail' },
+    telefone: { required: false, pattern: /^\(\d{2}\) \d{4,5}-\d{4}$/, label: 'Telefone' },
+    empresa:  { required: false, label: 'Empresa' },
+    desafio:  { required: true,  minLength: 10, label: 'Descrição do processo' },
+  };
+
+  const MESSAGES = {
+    required:  (label) => `${label} é obrigatório.`,
+    minLength: (label, n) => `${label} deve ter pelo menos ${n} caracteres.`,
+    pattern:   (label) => `${label} inválido. Confira o formato.`,
+  };
+
+  /* ── Helpers ──────────────────────────────────────────── */
+  const fields = [...$$('[name]', form)];
+  const getField = (name) => form.querySelector(`[name="${name}"]`);
+  const getError = (input) => input.closest('.form-group')?.querySelector('.form-error');
+
+  const setError = (input, msg = '') => {
+    input.classList.toggle('is-invalid', Boolean(msg));
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+
+    const err = getError(input);
+    if (err) {
+      // Liga a mensagem ao campo para leitores de tela
+      if (!err.id) err.id = `${input.id}-erro`;
+      input.setAttribute('aria-describedby', err.id);
+      err.textContent = msg;
+    }
+  };
+
+  const validateField = (input) => {
+    const rule = RULES[input.name];
+    if (!rule) return true;
+
+    const value = input.value.trim();
+
+    if (rule.required && !value) {
+      setError(input, MESSAGES.required(rule.label));
+      return false;
+    }
+    if (value && rule.minLength && value.length < rule.minLength) {
+      setError(input, MESSAGES.minLength(rule.label, rule.minLength));
+      return false;
+    }
+    if (value && rule.pattern && !rule.pattern.test(value)) {
+      setError(input, MESSAGES.pattern(rule.label));
+      return false;
+    }
+
+    setError(input);
+    return true;
+  };
+
+  /* ── Validação em tempo real ──────────────────────────── */
+  fields.forEach((field) => {
+    field.addEventListener('blur', () => validateField(field));
+    field.addEventListener('input', () => {
+      if (field.classList.contains('is-invalid')) setError(field);
+    });
+  });
+
+  /* ── Máscara de telefone: (11) 91234-5678 ─────────────── */
+  const telefone = getField('telefone');
+
+  telefone?.addEventListener('input', () => {
+    const digits = telefone.value.replace(/\D/g, '').slice(0, 11);
+    const ddd = digits.slice(0, 2);
+    const rest = digits.slice(2);
+
+    if (digits.length <= 2) {
+      telefone.value = ddd ? `(${ddd}` : '';
+    } else if (rest.length <= 4) {
+      telefone.value = `(${ddd}) ${rest}`;
+    } else {
+      const split = rest.length === 9 ? 5 : 4; // celular (9 dígitos) ou fixo (8)
+      telefone.value = `(${ddd}) ${rest.slice(0, split)}-${rest.slice(split)}`;
+    }
+  });
+
+  /* ── Preenchimento a partir da escolha de agente ──────── */
+  const desafio = getField('desafio');
+
+  document.addEventListener(INTEREST_EVENT, (e) => {
+    if (!desafio) return;
+    const { agent, area, article } = e.detail ?? {};
+    // Só preenche se o visitante ainda não escreveu nada
+    if (!desafio.value.trim() && agent) {
+      desafio.value = `Tenho interesse em um agente de ${area}, como ${article} ${agent}. `;
+    }
+  });
+
+  /* ── Envio ────────────────────────────────────────────── */
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const isValid = fields.map(validateField).every(Boolean);
+    if (!isValid) {
+      form.querySelector('.is-invalid')?.focus();
+      return;
+    }
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    const originalLabel = submitBtn.textContent.trim();
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando…';
+
+      const payload = Object.fromEntries(new FormData(form));
+
+      // ── Integração ──────────────────────────────────────
+      // VALIDAR: o formulário ainda não envia para nenhum lugar.
+      // Substitua a simulação abaixo pelo endpoint real, por exemplo:
+      //
+      // const response = await fetch('/api/contato', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(payload),
+      // });
+      // if (!response.ok) throw new Error('Erro no servidor.');
+
+      await new Promise((resolve) => setTimeout(resolve, 1200)); // simulação
+      console.info('[form.js] Dados do formulário:', payload);
+
+      showToast('Recebemos seus dados. Nosso time vai entrar em contato.', 'success');
+      form.reset();
+      fields.forEach((f) => setError(f));
+    } catch (err) {
+      console.error('[form.js] Erro ao enviar:', err);
+      showToast('Não foi possível enviar agora. Tente novamente ou fale com a Clara.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
+  });
 }
 
-// ── Regras de validação ────────────────────────────────────
-const RULES = {
-  nome: {
-    required: true,
-    minLength: 3,
-    label: 'Nome',
-  },
-  email: {
-    required: true,
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    label: 'E-mail',
-  },
-  telefone: {
-    required: false,
-    pattern: /^[\d\s()\-+]{8,}$/,
-    label: 'Telefone',
-  },
-  empresa: {
-    required: false,
-    label: 'Empresa',
-  },
-  desafio: {
-    required: true,
-    minLength: 10,
-    label: 'Desafio',
-  },
-};
+/* ── Toast de feedback ──────────────────────────────────── */
+// Cores com contraste AA para texto branco:
+// sucesso #1A7A6D (verde Algar escurecido), erro #CC0000
+const TOAST_COLORS = { success: '#1A7A6D', error: '#CC0000' };
 
-// ── Helpers ────────────────────────────────────────────────
-const getField = (name) => form.querySelector(`[name="${name}"]`);
-const getError = (input) =>
-  input.closest('.form-group')?.querySelector('.form-error');
-
-const setError = (input, msg) => {
-  input.classList.toggle('is-invalid', !!msg);
-  input.setAttribute('aria-invalid', msg ? 'true' : 'false');
-  const err = getError(input);
-  if (err) err.textContent = msg ?? '';
-};
-
-const clearError = (input) => setError(input, '');
-
-/**
- * Valida um campo individualmente.
- * @param {HTMLInputElement|HTMLTextAreaElement} input
- * @returns {boolean} true se válido
- */
-const validateField = (input) => {
-  const rule = RULES[input.name];
-  if (!rule) return true;
-
-  const value = input.value.trim();
-
-  if (rule.required && !value) {
-    setError(input, `${rule.label} é obrigatório.`);
-    return false;
-  }
-
-  if (value && rule.minLength && value.length < rule.minLength) {
-    setError(input, `${rule.label} deve ter pelo menos ${rule.minLength} caracteres.`);
-    return false;
-  }
-
-  if (value && rule.pattern && !rule.pattern.test(value)) {
-    setError(input, `${rule.label} inválido.`);
-    return false;
-  }
-
-  clearError(input);
-  return true;
-};
-
-// ── Validação em tempo real (ao sair do campo) ─────────────
-const fields = $$('[name]', form);
-
-fields.forEach(field => {
-  field.addEventListener('blur', () => validateField(field));
-  field.addEventListener('input', () => {
-    // Remove erro assim que usuário começa a corrigir
-    if (field.classList.contains('is-invalid')) clearError(field);
-  });
-});
-
-// ── Máscara de telefone ────────────────────────────────────
-const telefoneInput = getField('telefone');
-
-telefoneInput?.addEventListener('input', () => {
-  let v = telefoneInput.value.replace(/\D/g, '');
-  if (v.length > 11) v = v.slice(0, 11);
-
-  if (v.length <= 10) {
-    v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-  } else {
-    v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-  }
-
-  telefoneInput.value = v;
-});
-
-// ── Submit ─────────────────────────────────────────────────
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  // Valida todos os campos
-  const results = [...fields].map(validateField);
-  const isValid = results.every(Boolean);
-
-  if (!isValid) {
-    // Foca o primeiro campo inválido
-    const firstInvalid = form.querySelector('.is-invalid');
-    firstInvalid?.focus();
-    return;
-  }
-
-  const submitBtn = form.querySelector('[type="submit"]');
-  const originalLabel = submitBtn.textContent.trim();
-
-  try {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Enviando…';
-
-    const payload = Object.fromEntries(new FormData(form));
-
-    // ── Integração com backend ─────────────────────────────
-    // Descomente e adapte ao seu endpoint:
-    //
-    // const response = await fetch('/api/contato', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(payload),
-    // });
-    //
-    // if (!response.ok) throw new Error('Erro no servidor.');
-
-    // Simulação de delay (remova em produção)
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    console.info('[form.js] Dados enviados:', payload);
-
-    showSuccessMessage();
-    form.reset();
-    fields.forEach(f => f.classList.remove('is-invalid'));
-
-  } catch (err) {
-    console.error('[form.js] Erro ao enviar:', err);
-    showErrorMessage();
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalLabel;
-  }
-});
-
-// ── Feedback pós-envio ─────────────────────────────────────
-const createToast = (message, type = 'success') => {
-  const existing = document.querySelector('.form-toast');
-  existing?.remove();
+function showToast(message, type = 'success') {
+  document.querySelector('.form-toast')?.remove();
 
   const toast = document.createElement('div');
-  toast.className = 'form-toast';
-  toast.setAttribute('role', 'alert');
-  toast.setAttribute('aria-live', 'assertive');
-
-  toast.style.cssText = `
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: white;
-    background: ${type === 'success' ? '#28BEA5' : '#FA5975'};
-    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-    z-index: 9999;
-    animation: slideInToast 0.3s ease;
-  `;
-
+  toast.className = `form-toast form-toast--${type}`;
+  toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
   toast.textContent = message;
+
+  Object.assign(toast.style, {
+    position: 'fixed',
+    bottom: '1.5rem',
+    right: '1.5rem',
+    left: 'auto',
+    maxWidth: 'min(420px, calc(100vw - 3rem))',
+    padding: '1rem 1.25rem',
+    borderRadius: '10px',
+    fontFamily: 'inherit',
+    fontSize: '0.95rem',
+    fontWeight: '600',
+    color: '#FFFFFF',
+    background: TOAST_COLORS[type] ?? TOAST_COLORS.success,
+    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.2)',
+    zIndex: '9999',
+  });
+
   document.body.appendChild(toast);
-
-  setTimeout(() => toast.remove(), 5000);
-};
-
-const showSuccessMessage = () =>
-  createToast('✓ Mensagem enviada! Entraremos em contato em breve.', 'success');
-
-const showErrorMessage = () =>
-  createToast('Ocorreu um erro. Tente novamente ou entre em contato diretamente.', 'error');
-
-// Estilo da animação do toast
-const toastStyle = document.createElement('style');
-toastStyle.textContent = `
-  @keyframes slideInToast {
-    from { opacity: 0; transform: translateX(40px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
-`;
-document.head.appendChild(toastStyle);
+  setTimeout(() => toast.remove(), 6000);
+}
