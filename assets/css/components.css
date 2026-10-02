@@ -60,9 +60,7 @@
 }
 
 
-/* ══════════════ CARD DE SOLUÇÃO ══════════════
-   Bloco discreto, sem caixa: ícone + título + texto,
-   separado por uma linha no topo. */
+/* ══════════════ CARD DE SOLUÇÃO ══════════════ */
 
 .card {
   display: flex;
@@ -92,7 +90,7 @@
 }
 
 
-/* ══════════════ CARD DE AGENTE (formato card de plano Algar) ══════════════ */
+/* ══════════════ CARD DE AGENTE  ══════════════ */
 
 .agent-card {
   display: flex;
@@ -280,7 +278,7 @@
 }
 
 
-/* ══════════════ INDICADOR (Resultado que dá para medir) ══════════════ */
+/* ══════════════ INDICADOR  ══════════════ */
 
 .metric {
   padding-top: var(--space-md);
