@@ -1,8 +1,7 @@
 /* ─────────────────────────────────────────────
-   layout.css  –  Container, grid e helpers de layout
+   layout.css – Container e estrutura de seções
 ───────────────────────────────────────────── */
 
-/* ── Container central ── */
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -10,42 +9,31 @@
   padding-inline: var(--container-px);
 }
 
-/* ── Seção base ── */
+.container--narrow {
+  max-width: calc(var(--container-narrow) + 2 * var(--container-px));
+}
+
 .section {
   padding-block: var(--space-xl);
-  width: 100%;
 }
 
-
-.hero .container {
-  margin-inline: 0; /* remove centralização */
+.section--alt {
+  background-color: var(--color-bg-alt);
 }
 
-
-.section .container {
-  max-width: 1200px; /* aumenta bastante */
+/* Cabeçalho de seção: título + subtítulo (padrão Algar) */
+.section__head {
+  margin-bottom: var(--space-lg);
 }
 
+.section__title {
+  font-size: var(--text-h2);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
 
-
-/* ── Flex helpers ── */
-.flex          { display: flex; }
-.flex-center   { display: flex; align-items: center; justify-content: center; }
-.flex-between  { display: flex; align-items: center; justify-content: space-between; }
-.flex-col      { display: flex; flex-direction: column; }
-.gap-sm        { gap: var(--space-sm); }
-.gap-md        { gap: var(--space-md); }
-.gap-lg        { gap: var(--space-lg); }
-
-/* ── Visibilidade ── */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
+.section__subtitle {
+  margin-top: var(--space-xs);
+  font-size: var(--text-body-lg);
+  color: var(--color-text-muted);
 }
