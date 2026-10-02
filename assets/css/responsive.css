@@ -47,7 +47,13 @@
   .agent-detail__grid { grid-template-columns: 1fr 1fr; gap: var(--space-xl); }
 
   .cta-final__grid { grid-template-columns: 5fr 7fr; gap: var(--space-xl); }
-  .cta-final__visual { display: block; }
+
+  /* A imagem acompanha a rolagem enquanto a pessoa preenche o formulário */
+  .cta-final__visual {
+    display: block;
+    position: sticky;
+    top: calc(var(--navbar-height) + var(--space-md));
+  }
 
   .footer__inner { grid-template-columns: repeat(2, 1fr); }
 }
@@ -83,6 +89,8 @@
   .step__number { position: relative; }
 
   .footer__inner { grid-template-columns: 2fr repeat(4, 1fr); }
+
+  .cta-final__grid { grid-template-columns: 4fr 6fr; }
 }
 
 
