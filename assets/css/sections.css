@@ -483,15 +483,20 @@
 .cta-final__grid {
   display: grid;
   gap: var(--space-lg);
-  align-items: center;
+  align-items: start; /* imagem alinha com o topo do título, não com o meio do formulário */
 }
 
 .cta-final__visual { display: none; } /* imagem só a partir do tablet */
 
 .cta-final__image {
+  display: block;
   width: 100%;
-  max-width: 420px;
-  margin-inline: auto;
+  aspect-ratio: 3 / 4;            /* proporção da arte (1086 × 1448) */
+  object-fit: cover;
+  object-position: top center;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  background-color: var(--color-surface-dark); /* evita "buraco" branco enquanto carrega */
 }
 
 .cta-final__title {
